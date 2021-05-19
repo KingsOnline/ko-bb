@@ -5,7 +5,7 @@
   </div>
   <div class="container">
     <div class="row">
-      <div class="col-md-5 px-4">
+      <div class="col-md-5">
         <section class="options">
           <h3>Options</h3>
           <p>Complete the following fields:</p>
@@ -21,7 +21,7 @@
           </form>
         </section>
       </div>
-      <div class="col-md-7 px-4">
+      <div class="col-md-7">
         <section class="preview">
           <h3 class="preview-title">Preview</h3>
           <div id="quo-preview-pane"></div>

@@ -6,7 +6,7 @@
   </div>
   <div class="component-body container">
     <div class="row">
-      <div class="options col-md-6 px-4">
+      <div class="options col-md-6">
         <section class="options">
           <h3>Options</h3>
           <p>Select your options:</p>
@@ -38,7 +38,7 @@
           </form>
         </section>
       </div>
-      <div class="col-md-6 px-4">
+      <div class="col-md-6">
         <section class="preview">
           <h3 class="preview-title">Preview</h3>
           <div id="ib-preview-pane"></div>

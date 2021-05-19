@@ -64,7 +64,7 @@ img {
 }
 .component-content {
   display: none;
-  margin: 1.5rem 0;
+  margin: 1.5rem 0.8rem;
 }
 .component-content.selected {
   display: block;

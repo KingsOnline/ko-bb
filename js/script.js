@@ -159,7 +159,7 @@ $("#cd-type").change(function(data){
   preview("cd");  
 });
 
-// on selet change, show only the required no of cards to edit, update code and preview
+// on select change, show only the required no of cards to edit, update code and preview
 $("#cd-card-no").on('focus', function() {
   $(this).data("previous",$(this).val());
   $(this).blur();
@@ -224,8 +224,8 @@ function createCard(i) {
   return `<span id="code-cd-card-${i}"><pre>  <span class="code-open-tag">&lt;div&#32;class&#61;&#34;<span class="code-cd-type">${ $("#cd-type").val() == "float-box" ? "float-box" : "card" }</span>&#34;&gt;</span><span id="code-cd-${i}-img">
     <span id="code-cd-${i}-img-open">&lt;<span id="code-cd-img-container-open">img</span>&#32;src&#61;&#34;</span><span id="code-cd-${i}-img-src">https:\/\/via.placeholder.com\/300</span><span id="code-cd-${i}-img-middle">&#34;</span><span id="code-cd-${i}-img-alt"></span>&gt;<span id="code-cd-img-container-close"></span></span></span>
     <span class="code-open-tag">&lt;div&#32;class&#61;&#34;<span class="code-cd-body-class">card</span>&#45;body&#34;&gt;</span><span id="code-cd-${i}-title">
-      <span>&lt;h4&gt;</span><span id="code-cd-${i}-title-text">Card #${i} title</span><span>&lt;&#47;h4&gt;</span></span>
-      <span class="code-open-tag">&lt;p&gt;</span><span id="code-cd-${i}-text">Card #${i} text</span><span class="code-close-tag">&lt;&#47;p&gt;</span>
+      <span class="code-open-tag">&lt;h4&#32;class&#61;&#34;card-text&#34;&gt;</span><span id="code-cd-${i}-title-text">Card #${i} title</span><span>&lt;&#47;h4&gt;</span></span>
+      <span class="code-open-tag">&lt;p&#32;class&#61;&#34;card-text&#34;&gt;</span><span id="code-cd-${i}-text">Card #${i} text</span><span class="code-close-tag">&lt;&#47;p&gt;</span>
     <span class="code-close-tag">&lt;&#47;div&gt;</span>
   <span class="code-close-tag">&lt;&#47;div&gt;</span></pre></span>`;
 }
