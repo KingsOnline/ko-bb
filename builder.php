@@ -10,7 +10,7 @@
   </head>
   <body>
     <main>
-    <h1>KO Single-platform Bootstrap Builder</h1>
+    <h1>KO Single-platform Bootstrap Builder!</h1>
     <div>
       <div>
         <p class="header">Select the component you wish to build:</p>
