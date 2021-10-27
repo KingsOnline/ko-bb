@@ -1,7 +1,7 @@
-<div class="component-content" id="component-quotation">
+<div class="component-content" id="component-blockquote">
   <div class="component-header">
-    <h2 class="component-title">Quotation</h2>
-    <p><a href="https://keats.kcl.ac.uk/mod/book/view.php?id=3072535&chapterid=240598" target="_blank">Design System guidance and examples</a></p>
+    <h2 class="component-title">Blockquote</h2>
+    <p><a href="https://keats.kcl.ac.uk/mod/book/view.php?id=3072535&chapterid=436596" target="_blank">Design System guidance and examples</a></p>
   </div>
   <div class="container">
     <div class="row">
@@ -11,7 +11,7 @@
           <p>Complete the following fields:</p>
           <form id="quo-form">
             <div class="form-group">
-              <label for="quo-body">Quotation body</label>
+              <label for="quo-body">Blockquote body</label>
               <textarea class="form-control" id="quo-body" aria-label="va-q" placeholder="Write your quotation here..." rows="6"></textarea>
             </div>
             <div class="form-group">
@@ -35,7 +35,7 @@
             <pre class="code-text">
 <span id="quo-print-code"><span class="code-open-tag">&lt;figure&#32;class&#61&#34;quote&#45;box&#34;&gt;</span>
   <span class="code-open-tag">&lt;blockquote&#32;class&#61;&#34;quote&#45;body&#34;&gt;</span>
-    <span id="code-quo-body">This is the preview area where you can see what your quotation will look like.</span>
+    <span id="code-quo-body">This is the preview area where you can see what your blockquote will look like.</span>
   <span class="code-close-tag">&lt;&#47;blockquote&gt;</span>
   <span class="code-open-tag">&lt;figcaption&#32;class&#61;&#34;quote&#45;attribution&#34;&gt;</span>
     <span id="code-quo-att">And the attribution goes here (2021)</span>
