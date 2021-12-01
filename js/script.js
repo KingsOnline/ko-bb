@@ -771,8 +771,6 @@ function replaceString(string, index, replacement) {
 $("#ib-type").change(function() {
   $("#code-ib-type").text($(this).val());
   $("#code-ib-alert-class, #code-ib-alert-aria-label, #code-ib-caption").empty();
-  $("#code-ib-body").show(),
-  $("#ib-body-form").show(),
   $("#code-ib-title-text").text("Info box title");
   $(this).val() == "alert-instructional" || $(this).val() == "alert-caution"
     ? (
@@ -817,14 +815,13 @@ $("#ib-type").change(function() {
               ? $("#code-ib-title-text").text((!$("#ib-df-title").val() == "") ? $("#ib-df-title").val() : "Info box title")
               : $(this).val() == "learning-outcome-box"
                 ? (
-                  // $("#ib-body-form").show(),
-                  // $("#code-ib-body").show(),
-                  $("#code-ib-title-open").html("\n    &lt;h5&gt;"),                  
+                  $("#code-ib-body-open").text("<p>"),          
+                  $("#code-ib-body-close").text("</p>"),
+                  $("#code-ib-title-open").html("\n    &lt;h5&gt;"),
                   $("#code-ib-title-close").text("</h5>")        
                 )
                 : $(this).val() ==  "reading-box"
                   ? (                    
-                    $("#code-ib-body").show(),
                     $("#code-ib-body-open").html("&lt;p&gt;"), 
                     $("#code-ib-body-close").html("&lt;/p&gt;")
                   )
