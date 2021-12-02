@@ -14,7 +14,7 @@
     <h1>KO Single-platform Bootstrap Builder</h1>
     <div>
       <div>
-        <p class="header">Select the component you wish to build:</p>
+        <p class="header"><b>Select the component you wish to build:</b></p>
         <ul class="nav nav-tabs">
           <?php
             $components = array('Carousel', 'Collapse', 'Timeline', 'Table', 'Transcript', 'Card', 'List',
