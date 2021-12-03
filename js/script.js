@@ -1422,12 +1422,6 @@ updateText("ts", "#ts-id", ".code-ts-id", "modname-unitno-transcript-no");
 //updateText("ts", "#ts-link", "#code-ts-link", "#");
 updateText("ts", "#ts-body", "#code-ts-body-text", "Transcript body...");
 
-/*
-// toggle view close transcript button
-$(document).on("click", ".view-close-transcript", function(event) {
-  $(this).text($(this).text() == 'View transcript' ? 'Close transcript' : 'View transcript');
-});
-*/
 /**********************************
  * video                          *
  **********************************/
@@ -1540,16 +1534,9 @@ updateText("test", "#test-id", ".code-test-id", "modname-unitno-transcript-no");
 updateText("test", "#test-link", "#code-test-link", "#");
 updateText("test", "#test-body", "#code-test-body", "Transcript body...");
 
-// toggle view close transcript button
-$(document).on("click", ".view-close-transcript", function(event) {
-  $(this).text($(this).text() == 'View transcript' ? 'Close transcript' : 'View transcript');
-});
-
-
 const diff = (a,b) => {
   return Math.abs(a - b);
 }
-
 
 /**********************************
  * new carousel                   *
