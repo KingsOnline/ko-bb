@@ -12,6 +12,7 @@
   <body>
     <main>
       <h1>KO Single-platform Bootstrap Builder</h1>
+      <!-- foobar -->
     <div>
       <div>
         <p class="header">Select the component you wish to build:</p>
