@@ -1,7 +1,7 @@
 <div class="component-content" id="component-floatbox">
   <div class="component-header">
     <h2 class="component-title">Float box</h2>
-    <p><a href="https://keats.kcl.ac.uk/mod/book/view.php?id=3118035" target="_blank">Design System guidance and examples</a></p>
+    <p><a href="https://keats.kcl.ac.uk/mod/book/view.php?id=3118035&chapterid=520185" target="_blank">Design System guidance and examples</a></p>
   </div>
   <div class="component-body container">
     <div class="row">
@@ -35,7 +35,6 @@
         <section class="component-code">
            <div class="code-header">
             <h3 class="code-title">Code</h3>
-            <button class="btn btn-secondary" id="copy-fb-code">Copy Code</button>
           </div>
           <div class="code-box">
 <span id="fb-print-code"><span id="code-fb-cards"></span></span>

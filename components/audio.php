@@ -53,7 +53,6 @@
         <section class="component-code">
           <div class="code-header">
             <h3 class="code-title">Code</h3>
-            <button class="btn btn-secondary" id="copy-au-code">Copy Code</button>
           </div>
           <div class="code-box">
             <pre class="code-text"><span id="au-print-code"><span class="code-open-tag">&lt;div&#32;class&#61;&#34;audio&#45;container&#34;&gt;</span>

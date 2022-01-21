@@ -1,7 +1,7 @@
 <div class="component-content" id="component-timeline">
   <div class="component-header">
     <h2 class="component-title">Timeline</h2>
-    <p><a href="https://keats.kcl.ac.uk/mod/page/view.php?id=3118002" target="_blank">Design System guidance and examples</a></p>
+    <p><a href="https://keats.kcl.ac.uk/mod/book/view.php?id=5814682" target="_blank">Design System guidance and examples</a></p>
   </div>
   <div class="component-body container">
     <div class="alert alert-danger d-none" role="alert" id="timeline-alt-text-alert">
@@ -67,7 +67,6 @@
         <section class="component-code">
           <div class="code-header">
             <h3 class="code-title">Code</h3>
-            <button class="btn btn-secondary" id="copy-timeline-code">Copy Code</button>
           </div>
           <div class="code-box">
 <pre class="code-text">

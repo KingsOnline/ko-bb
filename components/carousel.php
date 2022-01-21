@@ -1,7 +1,7 @@
 <div class="component-content" id="component-carousel">
   <div class="component-header">
     <h2 class="component-title">Carousel</h2>
-    <p><a href="https://keats.kcl.ac.uk/mod/page/view.php?id=3118002" target="_blank">Design System guidance and examples9</a></p>
+    <p><a href="https://keats.kcl.ac.uk/mod/book/view.php?id=4598762" target="_blank">Design System guidance and examples</a></p>
   </div>
   <div class="component-body container">
     <div class="alert alert-danger d-none" role="alert" id="crs-alt-text-alert">
@@ -13,7 +13,8 @@
           <h3>Options</h3>
           <p>Complete the following fields:</p>
           <form class="needs-validation" id="crs-form" novalidate>
-              <div class="input-group mb-3">
+            <div class="row mb-3">
+              <div class="col-md-6 input-group">
                 <div class="input-group-prepend">
                   <label class="input-group-text" for="crs-type">Carousel type</label>
                 </div>
@@ -22,7 +23,7 @@
                    <option value="2">Portrait</option>
                 </select>
               </div>
-              <div class="input-group mb-3">
+              <div class="col-md-6 input-group">
                 <div class="input-group-prepend">
                   <label class="input-group-text" for="crs-slide-no">No. of slides</label>
                 </div>
@@ -36,11 +37,7 @@
                    <option value="8">8</option>
                 </select>
               </div>
-              <!-- Option to show or display image -->
-            <!-- <div class="custom-control custom-checkbox">
-              <input type="checkbox" class="custom-control-input checked" id="crs-check-img" checked>
-              <label class="custom-control-label" id="label-img" for="crs-check-img">Remove image</label>
-            </div> -->
+            </div>
             <div class="custom-control custom-checkbox">
               <input type="checkbox" class="custom-control-input unchecked" id="crs-check-caption" checked>
               <label class="custom-control-label" id="crs-label-caption" for="crs-check-caption">All Caption Titles</label>
@@ -77,7 +74,6 @@
         <section class="component-code">
           <div class="code-header">
             <h3 class="code-title">Code</h3>
-            <button class="btn btn-secondary" id="copy-crs-code">Copy Code</button>
           </div>
           <div class="code-box">
 <pre class="code-text">
