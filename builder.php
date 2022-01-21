@@ -7,10 +7,12 @@
     <link href="https://git.iddkingsonline.com/designsystem/css/bootstrap.css" rel="stylesheet">
     <link href="https://git.iddkingsonline.com/designsystem-dev/css/main.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
+    <link href="css/carousel.css" rel="stylesheet">
   </head>
   <body>
     <main>
       <h1>KO Single-platform Bootstrap Builder</h1>
+    <div>
       <div>
         <div class="alert alert-btw hide-for-chrome" role="alert">
           <p>As the Builder performs best on Google Chrome, it would be

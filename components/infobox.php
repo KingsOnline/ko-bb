@@ -20,9 +20,15 @@
                   <option value="definition-box">Definition</option>
                   <option value="alert-instructional">Instructional alert</option>
                   <option value="alert-caution">Caution alert</option>
+                  <optgroup label="Answer feedback">
+                    <option value="feedback-box-model-answer">Model answer</option>
+                    <option value="feedback-box-correct-answer">Correct answer</option>
+                    <option value="feedback-box-incorrect-answer">Incorrect answer</option>
+                  </optgroup>
                   <option value="key-concept-box">Key concept</option>
                   <option value="learning-outcome-box">Learning outcome</option>
                   <option value="reading-box">Reading</option>
+                  <option value="media-box">Media</option>
                   <option value="editing-help-box">Editing help</option>
                 </select>
               </div>
@@ -31,7 +37,7 @@
               <label for="ib-title">Info box title</label>
               <input type="text" class="form-control" id="ib-df-title" placeholder="Info box title">
             </div>
-            <div class="form-group">
+            <div class="form-group" id="ib-body-form">
               <label for="ib-text">Info box body text</label>
               <textarea class="form-control" id="ib-text" placeholder="Info box body text" rows="3"></textarea>
             </div>

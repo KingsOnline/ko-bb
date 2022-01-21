@@ -26,6 +26,9 @@ input[type="text"] {
 input[type="radio"] {
   margin-right: 0;
 }
+input[type="radio"] {
+  margin-right: 0;
+}
 textarea {
   font-family: Open Sans, sans-serif;
 }
