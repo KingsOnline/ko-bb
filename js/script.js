@@ -1,12 +1,31 @@
 today = new Date();
 dateString = today.toDateString();
 
+componentAbbrs = {
+  "academicnote": "an",
+  "audio": "au",
+  "blockquote": "quo",
+  "card": "cd",
+  "carousel": "crs",
+  "collapse": "col",
+  "download": "dl",
+  "floatbox": "fb",
+  "infobox": "ib",
+  "list": "li",
+  "table": "tab",
+  "timeline": "timeline",
+  "transcript": "ts",
+  "video": "vd",
+  "viewhide": "va",
+};
+
 $(document).ready(function() {
   preview("an");
   // default audio preview on load
   // set card to show 1 card by default
   maxCards = 1;
   initialCards(maxCards);
+  initialFloatBoxCards(maxCards);
   // set carousel to show 3 slides by default
   maxSlides = 3;
   initialCarouselSlides(maxSlides);
@@ -29,14 +48,19 @@ $(document).ready(function() {
   $("#vd-preview-pane").html('<div class="embed-responsive embed-responsive-400by285"><iframe id="kaltura_player" src="https://cdnapisec.kaltura.com/p/2368101/sp/236810100/embedIframeJs/uiconf_id/42876062/partner_id/2368101?iframeembed=true&playerId=kaltura_player&entry_id=0_m83muzm5&flashvars[streamerType]=auto&amp;flashvars[localizationCode]=en&amp;flashvars[leadWithHTML5]=true&amp;flashvars[sideBarContainer.plugin]=true&amp;flashvars[sideBarContainer.position]=left&amp;flashvars[sideBarContainer.clickToClose]=true&amp;flashvars[chapters.plugin]=true&amp;flashvars[chapters.layout]=vertical&amp;flashvars[chapters.thumbnailRotator]=false&amp;flashvars[streamSelector.plugin]=true&amp;flashvars[EmbedPlayer.SpinnerTarget]=videoHolder&amp;flashvars[dualScreen.plugin]=true&amp;flashvars[Kaltura.addCrossoriginToIframe]=true&amp;&wid=1_fejlyov0&amp;flashvars[infoScreen.plugin]=false&amp;flashvars[titleLabel.plugin]=false&amp;flashvars[related.plugin]=false&amp;flashvars[closedCaptions.displayCaptions]=false&amp;flashvars[closedCaptions.layout]=below&amp;flashvars[transcript.plugin]=false&amp;flashvars[IframeCustomPluginCss1]=https://git.iddkingsonline.com/kaltura/kaltura.css" width="400" height="285" allowfullscreen webkitallowfullscreen mozAllowFullScreen allow="autoplay *; fullscreen *; encrypted-media *" frameborder="0" title="Kaltura Player"></iframe></div>');
 });
 
-//display component on nav select
+// display component on nav select
 $(".nav-link").click(function() {
   $("#component-builder").show();
   $(".component-content").each(function() {
     $(this).hide();
   });
   linkId = this.id.slice(5);
+  componentAbbr = componentAbbrs[linkId];
   $("#component-" + linkId).show();
+  // generate 'Copy code' button
+  $(".code-header button").remove();
+  $("#component-" + linkId).find(".code-header")
+    .append(`<button class="btn btn-primary" id="copy-${componentAbbr}-code">Copy code</button`);
 });
 
 /**********************************
@@ -199,7 +223,7 @@ $("#cd-layout").change(function(){
 });
 
 function cdLayout() {
-  $("#cd-layout").val() == "deck" && $("#cd-type").val() == "default"
+  $("#cd-layout").val() == "deck"
     ? ($("#code-cd-deck-open").text('<div class="card-deck">'),
       $("#code-cd-deck-close").text("</div>"),
       $(".code-cd-img-position").text("top"))
@@ -322,6 +346,117 @@ function showCardImgs(cardCardLimit) {
       ? ' alt="' + $("#cd-" + i + "-img-alt").val() + '"'
       : "");
     $(".code-cd-img-close").text('>');
+  }
+}
+
+/**********************************
+ * float box                      *
+ **********************************/
+
+// on select change, show only the required no of cards to edit, update code and preview
+$("#fb-card-no").on('focus', function() {
+  $(this).data("previous",$(this).val());
+  $(this).blur();
+  $("#fb-card-no").change(function(){
+    newMax = Number(($(this).val()));
+    oldMax = Number(($(this).data("previous")));
+    // compare old and new max list item value
+    if (newMax > oldMax) {
+      for (let i = oldMax; i < newMax; i++) {
+        // add new items
+        card = createFloatBoxCard(i+1);
+        $("#code-fb-cards").append(card);
+        fbCard = createFloatBoxEditorCard(i+1);
+        $("#floatboxes").append(fbCard);
+      }
+    } else {
+      for (let i = newMax; i < oldMax; i++) {
+        // remove items
+        $("#code-fb-card-"+(i+1)).remove();
+        $("#fb-card-"+(i+1)).remove();
+      }
+    }
+    // reset previous value
+    $(this).removeData("previous");
+    preview("fb");
+  });
+});
+
+// create all float box editor cards and code on page load
+function initialFloatBoxCards(maxCards) {
+  for (let i = 1; i <= maxCards; i++) {
+    fbCard = createFloatBoxCard(i);
+    $("#code-fb-cards").append(fbCard);
+    fbEditorCard = createFloatBoxEditorCard(i);
+    $("#floatboxes").append(fbEditorCard);
+  }
+  preview("fb");
+}
+
+// create single float box card code
+function createFloatBoxCard(i) {
+  return `<span
+  id="code-fb-card-${i}"><pre>&lt;div&#32;class&#61;&#34;float-box<span id="$code-fb-${i}-img-side"><span>&#34;&gt;
+  &lt;div&gt;<span id="code-fb-${i}-title" class="code-fb-title">
+    &lt;h4&gt;<span id="code-fb-${i}-title-text">Float box #${i} title</span>&lt;&#47;h4&gt;</span>
+    &lt;p&gt;<span id="code-fb-${i}-text">Float box #${i} text...</span>&lt;&#47;p&gt;
+  &lt;&#47;div&gt;
+  &lt;figure&gt;
+    &lt;img src&#61;&#34;<span
+    id="code-fb-${i}-img-src">https://placekitten.com/300/200</span>&#34;<span
+    id="code-fb-${i}-img-alt"></span>&gt;
+  &lt;/figure&gt;
+&lt;&#47;div&gt;</pre></span>`;
+}
+
+// create single float box editor card, shows first card and collapses all others
+function createFloatBoxEditorCard(i) {
+  return `
+    <div class="collapse-card fb-card ${ i == 1 ? "" : "collapsed" }"
+    id="fb-card-${i}">
+      <div class="collapse-header" id="fb-card-heading-${i}">
+        <button class="btn btn-link"><h5 class="h4">Float box #${i}</h5></button>
+      </div>
+      <div class="collapse-body" id="fb-collapse-${i}">
+        <form>
+          <div class="form-group fb-img-form fb-${i}-img-form"
+          id="fb-${i}-img-src-form">
+            <label for="fb-${i}-header">Img src</label>
+            <input type="text" class="form-control" id="fb-${i}-img-src"
+            placeholder="https://via.placeholder.com/300">
+          </div>
+          <div class="form-group fb-img-form fb-${i}-img-form"
+          id="fb-${i}-img-alt-form">
+            <label for="fb-${i}-header">Img alt text</label>
+            <input type="text" class="form-control" id="fb-${i}-img-alt"
+            placeholder="Description of image">
+          </div>
+          <div class="form-group" id="fb-${i}-title-form" class="fb-title-form">
+            <label for="fb-${i}-title">Title</label>
+            <input type="text" class="form-control" id="fb-${i}-title"
+            placeholder="Float box #${i} title">
+          </div>
+          <div class="form-group">
+            <label for="fb-${i}-text">Body text</label>
+            <textarea class="form-control" id="fb-${i}-text"
+            placeholder="Float box #${i} text" rows="6"></textarea>
+          </div>
+        </form>
+      </div>
+    </div>
+  `;
+}
+
+// generate float box text from input
+updateFloatBoxes(4);
+
+function updateFloatBoxes(floatBoxCardLimit) {
+  for (let i = 1; i <= floatBoxCardLimit; i++) {
+    // update text
+    updateText("fb", "#fb-" + i + "-img-src", "#code-fb-" + i + "-img-src", "https://via.placeholder.com/300");
+    updateAltText("fb", "#fb-" + i + "-img-alt", "#code-fb-" + i + "-img-alt");
+    updateText("fb", "#fb-" + i + "-title", "#code-fb-" + i + "-title-text", "Float box #" + i + " title");
+    updateText("fb", "#fb-" + i + "-text", "#code-fb-" + i + "-text", "Float box #" + i + " text");
   }
 }
 
@@ -629,7 +764,7 @@ $(document).on("click", "#geshi-check-line-nos", function(event) {
  **********************************/
 
 /*
- strips a string (a name id), from everything but the first word before the choosen character
+ strips a string (a name id), from everything but the first word before the chosen character
   and capitalize it if 3rd parameter false(default). If true, it reverses its functionality.
 */
  function cleanString(string, fromChar, reverse = false) { 
@@ -637,88 +772,106 @@ $(document).on("click", "#geshi-check-line-nos", function(event) {
   if(reverse){
     str ++;
     let clean = string.substr(str,string.length-1);
+    // Instructional alert
     if (clean == "instructional") {
       return "Note";
-    } 
+    // Key concept box
+    } else if (clean == "concept-box") {
+      return "Important";
+    }
     return clean[0].toUpperCase() + clean.slice(1);    
     
   } else if (!reverse){
       let clean = string.substr(0,str);
-      if(clean == "reading") {
+      // Reading box
+      if (clean == "reading") {
         return "Read";
       }
       return clean[0].toUpperCase() + clean.slice(1);
   }
 }
 
+function replaceString(string, index, replacement) {
+  return string.substr(0, index) + replacement + string.substr(index + replacement.length);
+}
+
 // change infobox type
 $("#ib-type").change(function() {
-  $("#code-ib-type").text($(this).val());
+  // empty Alert fields and Editing help caption
   $("#code-ib-alert-class, #code-ib-alert-aria-label, #code-ib-caption").empty();
-  $("#code-ib-title-text").text("Info box title");
-  $(this).val() == "alert-instructional" || $(this).val() == "alert-caution"
+  // reset body text tags
+  $("#code-ib-body-open").text("<p>");
+  $("#code-ib-body-close").text("</p>");
+  // for Module resource block options and Learning outcome box
+  $(this).val().indexOf("mrb-") == 0 | $(this).val().indexOf("learning") == 0
     ? (
-      $("#code-ib-alert-class").text("alert "),
-      $("#code-ib-alert-aria-label").text(' aria-label="alert"'),
-      $(this).val() == "alert-instructional"
-        ? (
-          $("#code-ib-title-open, #code-ib-title-text, #code-ib-title-close").empty(),
-          $("#ib-title-form").hide(),
-          $("#code-ib-body-open").html("&lt;p&gt;&lt;span role&#61;&#34;text&#34;&gt;&lt;span class&#61;&#34;sr-only&#34;&gt;" + cleanString($(this).val(), "-",true) + ": &lt;/span&gt;"),
-          $("#code-ib-body-text").text((!$("#ib-df-title").val() == "") ? $("#ib-df-title").val() : "Info box body text" ),
-          $("#code-ib-body-close").text("</span></p>")
-        )
-        : (
-          $("#ib-title-form").show(),
-          $("#code-ib-body-open").text("<p>"),          
-          $("#code-ib-body-close").text("</p>"),
-          $("#code-ib-title-open").html("\n    &lt;h5&gt;&lt;span role&#61;&#34;text&#34;&gt;&lt;span class&#61;&#34;sr-only&#34;&gt;" + cleanString($(this).val(), "-",true) + ": &lt;/span&gt;"),
-          $("#code-ib-title-close").text("</span></h5>")
-        )
-      )
-    : (
-      $("#code-ib-alert-class, #code-ib-alert-aria-label").empty(),
-      $(this).val() == "key-concept-box"
-        ? (
-          $("#ib-title-form").hide(),
-          $("#code-ib-title-open, #code-ib-title-text, #code-ib-title-close").empty(),
-          $("#code-ib-body-open").html("&lt;p&gt;&lt;span role&#61;&#34;text&#34;&gt;&lt;span class&#61;&#34;sr-only&#34;&gt;Important: &lt;/span&gt;"),
-          $("#code-ib-body-close").text("</span></p>")
-        )
-        : (
-          $("#ib-title-form").show(),
-          $("#code-ib-title-open").html("\n    &lt;h5&gt;&lt;span role&#61;&#34;text&#34;&gt;&lt;span class&#61;&#34;sr-only&#34;&gt;" + cleanString($(this).val(), "-") + ": &lt;/span&gt;"),
+      typeClass = ($(this).val().slice(4)),
+      typeClass =
+        typeClass == "my-journal"
+          ? "journal"
+          : typeClass == "shared-resources"
+            ? "shared"
+            : typeClass == "social-annotation-files"
+              ? "files"
+              : "learning-outcome",
+      $("#code-ib-type").text(typeClass + "-box"),
+      // hide title form
+      $("#ib-title-form").hide(),
+      $("#code-ib-title-open").html("\n    &lt;h5&gt;"),
+      $("#code-ib-title-text").text(
+      typeClass == "learning-outcome"
+        ? "Learning outcomes"
+        : $(this).val().slice(4).replace(/^(\S)/g, s=>s.toUpperCase()).replace(/-/g," ")),
+      $("#code-ib-title-close").text("</h5>")
+    ) : (
+      // set type as class
+      $("#code-ib-type").text($(this).val()),
+      // show title form
+      $("#ib-title-form").show(),
+      // set title text
+      $("#code-ib-title-text").text((!$("#ib-df-title").val() == "") ? $("#ib-df-title").val() : "Info box title"),
+      // Answer feedback boxes
+      $(this).val().indexOf("feedback") == 0
+        // separate 'feedback box' and answer type classes
+        ? ($("#code-ib-type").text(replaceString($(this).val(), 12, " ")),
+          // set title tags
+          $("#code-ib-title-open").html("\n    &lt;h5&gt;"),
+          $("#code-ib-title-close").text("</h5>"))
+        : // set title tags with role and sr-only span for all other cases
+          ($("#code-ib-title-open").html("\n    &lt;h5&gt;&lt;span role&#61;&#34;text&#34;&gt;&lt;span class&#61;&#34;sr-only&#34;&gt;" + cleanString($(this).val(), "-") + ": &lt;/span&gt;"),
           $("#code-ib-title-close").text("</span></h5>"),
-          $(this).val() == "editing-help-box"
-            ? (
-              $("#code-ib-title-text").text((!$("#ib-df-title").val() == "") ? $("#ib-df-title").val() : "Info box title"),
-              $("#code-ib-body-open").html("&lt;p&gt;"),              
-              $("#code-ib-body-close").text("</p>"),
-              $("#code-ib-caption").text('\n    <p class="caption">Note: This help message is not displayed to students.</p>'))
-            : $(this).val() == "definition-box"
-              ? $("#code-ib-title-text").text((!$("#ib-df-title").val() == "") ? $("#ib-df-title").val() : "Info box title")
-              : $(this).val() == "learning-outcome-box"
-                ? (
-                  $("#code-ib-body-open").text("<p>"),          
-                  $("#code-ib-body-close").text("</p>"),
-                  $("#code-ib-title-open").html("\n    &lt;h5&gt;"),
-                  
-                  $("#code-ib-title-close").text("</h5>")        
-                )
-                : $(this).val() ==  "reading-box"
-                  ? (                    
-                    $("#code-ib-body-open").html("&lt;p&gt;"), 
-                    $("#code-ib-body-close").html("&lt;/p&gt;")
-                  )
-                  : console.log("foo")
-            ));
+          // for Alert or Key concept box
+          $(this).val().indexOf("alert") == 0 | $(this).val().indexOf("key") == 0
+            ? ($(this).val() == "alert-caution"
+                  // for Caution alert
+                ? $("#code-ib-title-open").html("\n    &lt;h5&gt;&lt;span role&#61;&#34;text&#34;&gt;&lt;span class&#61;&#34;sr-only&#34;&gt;" + cleanString($(this).val(), "-",true) + ": &lt;/span&gt;")
+                  // for Instructional alert or Key concept box
+                : // hide title form
+                  ($("#ib-title-form").hide(),
+                  // remove title
+                  $("#code-ib-title-open, #code-ib-title-text, #code-ib-title-close").empty(),
+                  // body text prepend 'Note/Important: ' span
+                  $("#code-ib-body-open").html("&lt;p&gt;&lt;span role&#61;&#34;text&#34;&gt;&lt;span class&#61;&#34;sr-only&#34;&gt;" + cleanString($(this).val(), "-",true) + ": &lt;/span&gt;"),
+                  $("#code-ib-body-close").text("</span></p>"))
+              ,
+              // add Alert class and aria label
+              $(this).val().indexOf("alert") == 0
+                ? ($("#code-ib-alert-class").text("alert "),
+                  $("#code-ib-alert-aria-label").text(' aria-label="alert"'))
+                : ""
+              )
+            // add help caption for Editing help box
+            : $(this).val() == "editing-help-box"
+              ? $("#code-ib-caption").text('\n    <p class="caption">Note: This help message is not displayed to students.</p>')
+              : console.log("Infobox type not found")
+          )
+      );
   preview("ib");
 });
 
 // update infobox text
 updateText("ib", "#ib-text", "#code-ib-body-text", "Info box body text");
 updateText("ib", "#ib-df-title", "#code-ib-title-text", "Info box title");
-
 
 
 /**********************************
@@ -755,9 +908,9 @@ $("#ls-item-no").on('focus', function() {
 });
 
 // change list type
-$("#ls-type").change(function(data){
-  type = $(this).val();
-  $(".code-ls-tag").text(type);
+$("#ls-type").change(function(){
+  listType = $(this).val();
+  $(".code-ls-tag").text(listType);
   preview("ls");
 });
 
@@ -774,19 +927,19 @@ function initialListItems(maxListItems) {
 
 // create single list item code, shows first card and collapses all others
 function createListItem(i) {
-  return `${ i == 1 ? "" : "  "}<span class="code-ls-item" id="code-ls-item-${i}"><span class="code-open-tag">\n  &lt;li&gt;</span>
-    <span id="code-ls-item-${i}-text">${ !$("#ls-item-" + i + "-text").val() == "" ? $("#ls-item-" + i + "-text").val() : "List item #" + i + " text"}</span>
-  <span class="code-close-tag">&lt;&#47;li&gt;</span></span>`;
+  return `${ i == 1 ? "" : "  "}<span class="code-ls-item" id="code-ls-item-${i}"><span class="code-open-tag">\n  &lt;li&gt;</span><span id="code-ls-item-${i}-text">${ !$("#ls-item-" + i + "-text").val() == "" ? $("#ls-item-" + i + "-text").val() : "List item #" + i + " text"}</span><span class="code-close-tag">&lt;&#47;li&gt;</span></span>`;
 }
 
 // create single card editor card, shows first card and collapses all others
 function createListItemEditorCard(i) {
   return `
-<div class="input-group mb-3" id="ls-item-${i}-card">
-  <div class="input-group-prepend">
+<div class="row input-group mb-3" id="ls-item-${i}-card">
+  <div class="col-md input-group-prepend">
     <span class="input-group-text">${i}</span>
   </div>
-  <input type="text" class="form-control" id="ls-item-${i}-text" aria-label="List item text">
+  <div class="col-md-11">
+    <input type="text" class="form-control" id="ls-item-${i}-text" aria-label="List item text">
+  </div>
 </div>`;
 }
 
@@ -1291,16 +1444,8 @@ $("#ts-type").change(function() {
 });
 
 updateText("ts", "#ts-id", ".code-ts-id", "modname-unitno-transcript-no");
-//updateText("ts", "#ts-body", "#code-ts-body", "foo");
-//updateText("ts", "#ts-link", "#code-ts-link", "#");
 updateText("ts", "#ts-body", "#code-ts-body-text", "Transcript body...");
 
-/*
-// toggle view close transcript button
-$(document).on("click", ".view-close-transcript", function(event) {
-  $(this).text($(this).text() == 'View transcript' ? 'Close transcript' : 'View transcript');
-});
-*/
 /**********************************
  * video                          *
  **********************************/
@@ -1413,10 +1558,626 @@ updateText("test", "#test-id", ".code-test-id", "modname-unitno-transcript-no");
 updateText("test", "#test-link", "#code-test-link", "#");
 updateText("test", "#test-body", "#code-test-body", "Transcript body...");
 
-// toggle view close transcript button
-$(document).on("click", ".view-close-transcript", function(event) {
-  $(this).text($(this).text() == 'View transcript' ? 'Close transcript' : 'View transcript');
-});
+const diff = (a,b) => {
+  return Math.abs(a - b);
+}
+
+/**********************************
+ * new carousel                   *
+ **********************************/
+
+// constants for the addDots function:
+
+const dots = document.querySelector(".indic-dots");
+const dotsCode = document.querySelector("#dots-code-crs");
+
+// adds dots to the slide for the carousel
+//   -slideNum : number of slides to generate. Default 3.
+//   -encoded : It stablishes the output ? encoded version (for the code display) : regular html output (preview display)
+
+const addDots = (slideNum = 0, encoded) => {
+  let dot = "";
+  for (let i = 0; i < slideNum; i++) {
+    dot = encoded ? `<span class="crs-dots-remove">\n\t&#60;li&#62;&#60;/li&#62;</span>${i == slideNum -1 ? `` : `\n`}` : `<li></li>\n`;
+  }
+  return (encoded ? dotsCode : dots).insertAdjacentHTML("beforeend", dot);
+}
+
+// addSlides to the carousel:
+//  -toElement: element to append the output to // -slideNum: number of slides to add // -current: current number of slides and update the id
+//   -encoded: output ? encoded version : regular html
+
+const addSlides = (toElement, slideNum, current, encoded) => {
+    checkBoxesChecked(["#crs-check-caption"], ["caption"]);
+
+    let slideType = document.querySelector("#crs-type");
+    let imgSrc;
+
+      slideType.value == "1" ?
+      (
+        removeClass(".new-carousel",["portrait-carousel"]),
+        addClass(".new-carousel",["landscape-carousel"],"new-carousel"),
+        writeText([".crs-type"],"landscape"),
+        imgSrc = "https://via.placeholder.com/800x400"
+      ) :
+        (
+          removeClass(".new-carousel",["landscape-carousel"]),
+          addClass(".new-carousel",["portrait-carousel"],"new-carousel"),
+          writeText([".crs-type"],"portrait"),
+          imgSrc = "https://via.placeholder.com/400x400"
+        )
+
+    let total;
+    let slide = "";
+    for (let i = 0; i < slideNum; i++) { // for encoded generated output: code area
+      total = i + current;
+      slide += encoded ? `\n    <span class="crs-code-remove">&#60;li&#62;\n      &#60;figure&#62;
+        <span class="crs-code-img">&#60;img&#32;src&#61;&#34;<span id="crs-code-src-${total}" class="crs-code-src">${imgSrc}</span>&#34;&#32;alt&#61;&#34;<span id="crs-code-alt-${i}">Alternative&#32;text</span>&#34;&#32;class&#61;&#34;nc&#45;image&#34;&#62;</span>
+        &#60;figcaption&#32;class&#61;&#34;nc&#45;description&#34;&#62;<span class="crs-code-title" id="crs-code-title-tag-${total}">
+          &#60;h5&#62;<span id="crs-code-title-${total}">Caption&#32;title&#32;${total + 1}</span>&#60;/h5&#62;</span>
+          &#60;p&#62;<span id="crs-code-body-${total}">Carousel&#32;slide&#32;${total + 1}&#32;body&#32;text</span>&#60;/p&#62;
+        &#60;/figcaption&#62;
+      &#60;/figure&#62;
+    &#60;/li&#62;</span>`
+      : // not encoded generated output: preview area
+      `<li><figure>
+      <img src=${imgSrc} alt="Alternative text" class="nc-image" id="crs-img-${total}">
+      \t<figcaption class="nc-description">
+      <h5 id="crs-card-title-${total}" style="display: ${caption ?  "" : "none" }">Caption title ${total + 1}</h5>
+      \n\t\t<p id="crs-card-body-${total}">Carousel slide ${total + 1} body text</p>\n\t</figcaption>\n\t</figure>\n\t</li>\n`;
+
+      // Adding the dots
+      addDots(current + i, encoded);
+    }
+  return toElement.insertAdjacentHTML("beforeend",slide);
+}
+
+ // remove slides ,dots, cards from every display area
+
+const removeSlides = (elements = [], cardNum) => {
+  for (let i = 0; i < cardNum; i++){
+    elements.forEach((e) => { e.lastElementChild.remove() });
+  }
+}
+
+// previous button disabled till next is pressed
+
+document.querySelector(".nc-previous").disabled = true;
+
+// controlling slide with dots
+
+// let current = document.querySelector(".active");
+// const crsDots = Array.from(dots.children);
+// const gallery = document.querySelector('.nc-gallery');
+// const slides = Array.from(gallery.children);
+
+
+// document.querySelector(".nc-previous").onclick = function() {
+//   current.previousElementSibling.classList.add("active");
+//   current.classList.remove("active");
+
+// }
+
+// document.querySelector(".nc-next").onclick = function() {
+//   current.classList.remove("active");
+//   current.nextElementSibling.classList.add("active");
+
+// }
+
+
+// dots.onclick = function(e) {
+//   const targetDot = e.target.closest('li');
+
+//   if (!targetDot) return;
+//   document.querySelector(".active").classList.remove("active");
+//   targetDot.classList.add("active");
+//   const currentSlide = e.target.id;
+//   const targetIndex = crsDots.findIndex(dot => dot === targetDot);
+//   console.log(targetIndex);
+
+// }
+
+
+
+// toggles carousel type from landscape to portrait
+const type = document.getElementById("crs-type");
+let crsType = document.querySelector(".new-carousel").classList;
+const crsCodeType = document.querySelector(".crs-type");
+
+type.onchange = () => {
+  type.value == "1" ?
+  (
+    removeClass(".new-carousel",["portrait-carousel"]),
+    addClass(".new-carousel",["landscape-carousel"],"new-carousel"),
+    writeText([".crs-type"],"landscape"),
+    writeText([".crs-code-src"],"https://via.placeholder.com/800x400"),
+    document.querySelectorAll(".nc-image").forEach((i) => { i.src = "https://via.placeholder.com/800x400?text=Landscape:+2:1"; })
+  ) : (
+    removeClass(".new-carousel",["landscape-carousel"]),
+    addClass(".new-carousel",["portrait-carousel"],"new-carousel"),
+    writeText([".crs-type"],"portrait"),
+    writeText([".crs-code-src"],"https://via.placeholder.com/400x400"),
+    document.querySelectorAll(".nc-image").forEach((i) => { i.src = "https://via.placeholder.com/400x400?text=Portrait:+1:1"; })
+  )
+}
+
+
+let imageChecked = true;
+let captionChecked = true;
+// selection dropdown
+const selection = document.querySelector("#crs-slide-no");
+// slides will generate here in code area
+const code = document.getElementById("slides-code-crs");
+// slides will generate here in preview area
+const displayCrs = document.querySelector(".nc-gallery");
+
+// Initializing views:
+
+// Preview area
+addSlides(displayCrs,selection.value,0,false);
+// Code display area
+addSlides(code,selection.value,0,true);
+// Form on the Options area
+addCard("#crs-collapse-container",selection.value,0, "Slide");
+
+
+// processing
+const crsCaptionElements = ['.nc-description h5','.crs-caption-form','.crs-code-title'];
+processCheckBox("#crs-check-caption",crsCaptionElements);
+
+const collapseForm = document.querySelector("#crs-collapse-container");
+const captionCheckBox = document.querySelector("#crs-check-caption");
+
+//Generate cards for the input forms of the collapse and change the preview the code and the form panels on select changing value
+let elements = [code,displayCrs,dots,dotsCode]
+selection.onchange = () => {
+  let current = collapseForm.childElementCount;
+  let maxValue = 8;
+  let newValue = diff(current, selection.value);
+  captionChecked = captionCheckBox.checked;
+  //check if selection <= maximum (8) && if selection.value > current
+  (newValue + current <= maxValue) && (selection.value > current) ?
+  (
+    addCard("#crs-collapse-container", newValue, current, "Slide"),
+    addSlides(code,newValue,current,true),
+    addSlides(displayCrs,newValue,current,false),
+    // re-activate next button
+    document.querySelector(".nc-next").disabled = false
+  ) :
+  (
+    removeCards(["#crs-collapse-container"],newValue),
+    removeSlides(elements, newValue)
+  )
+}
+let cC = 0;
+// collapse form control
+const crsCollapse  = document.querySelector("#crs-collapse-container");
+crsCollapse.onclick = function(e) {
+  checkBoxesChecked(["#crs-check-caption"], ["captionC"])
+  let totalForms = this.childElementCount;
+  let crsElements = [];
+  let eId = e.target.id;
+  let _id = eId.slice(-1);
+  if (!eId) {
+    return;
+  } else {
+
+    // individual caption checkbox
+    eId === `crs-check-caption-${_id}` ?
+      (
+        crsElements = [`#crs-card-title-${_id}`,`#crs-caption-form-${_id}`,`#crs-code-title-tag-${_id}`],
+        processCheckBox(`#crs-check-caption-${_id}`,crsElements),
+        // get if caption is checked
+        captionC ? cC = totalForms : "",
+        document.querySelector(`#crs-check-caption-${_id}`).checked
+        ? ( cC++, cC == totalForms ? tickCheckBoxes(["#crs-check-caption"], [true], ["All Caption Titles"]) : "")
+        : (cC--, cC < totalForms ? tickCheckBoxes(["#crs-check-caption"], [false], ["All Caption Titles"]) : "")
+      ) : "";
+
+  }
+
+}
+
+// collapse form fields control
+processCollapseForm("#crs-collapse-container","https://via.placeholder.com/800x400", "Alternative text")
+
+
+/*************************
+ * new timeline
+ ************************/
+
+ const addTimelineCard = (toElement, cardNum, current, encoded) => {
+  // checks whether the checkBoxesArray is checked or not and returns/assign a name(second array[variables]) for each of the checkbox elements.
+  checkBoxesChecked(["#timeline-check-img","#timeline-check-caption"], ["image","caption"]);
+  let el = document.querySelector(toElement);
+  cardNum = Number(cardNum);
+  let card = "";
+  for (let i = 0; i < cardNum; i++) { // for encoded generated output: code area
+    let total = i + current;
+    card += encoded ? `  &lt;div class=&quot;timeline-card<span id="timeline-code-highlight-${total}" style="display: none"> highlight</span>&quot;&gt;
+    &lt;div class=&quot;card-body&quot;&gt;
+      <span class="timeline-code-date-tag" id="timeline-code-date-tag-${total}" style="display:${caption ? "" : "none"};">&#60;h3 class=&quot;date-label&quot;&#62;
+        <span id="timeline-code-date-${total}">Date&#32;Label&#32;${total + 1}</span>
+      &#60;/h3&#62;</span><span class="timeline-code-title-tag" id="timeline-code-title-tag-${total}" style="display:${caption ? "" : "none"};">
+      &#60;h4 class=&quot;card-text&quot;&#62;
+        <span id="timeline-code-title-${total}">Caption&#32;Title&#32;${total + 1}</span>
+      &#60;/h4&#62;</span>
+      &lt;p class=&quot;card-text&quot;&gt;
+        <span id="timeline-code-body-${total}">Card&#32;${total + 1}&#32;Body&#32;text</span>
+      &lt;/p&gt;
+    &lt;/div&gt;<span class="timeline-code-img" id="timeline-code-img-${total}" style="display:${image ? "" : "none"};">\n    &lt;figure class=&quot;card-image&quot;&gt;
+      &#60;img&#32;src&#61;&#34;<span id="timeline-code-src-${total}">http:&#47;&#47;via.placeholder.com&#47;300x300</span>&#34;&#32;alt&#61;&#34;<span id="timeline-code-alt-${total}">Alternative&#32;text</span>&#34;&#62;<span class="timeline-code-img-caption" id="timeline-code-img-caption-${total}">
+      &lt;figcaption&gt;<span id="timeline-code-caption-${total}" class="timeline-code-caption">Image Caption ${total+1}</span>&lt;/figcaption&gt;</span>
+    &lt;/figure&gt;</span>
+  &lt;/div&gt;\n`
+    : // not encoded generated output: preview area
+    `<div class="timeline-card" id="timeline-card-${total}">
+        <div class="card-body">
+          <h3 class="date-label" id="timeline-card-date-${total}">Date Label ${total + 1}</h3>
+          <h4 class="card-title" id="timeline-card-title-${total}" style="display:${caption ? "block" : "none"};">Caption Title ${total+ 1}</h4>
+          <p class="card-text" id="timeline-card-body-${total}">Card ${total+ 1} Body text</p>
+        </div>
+        <figure class="card-image">
+          <img id="timeline-img-${total}" class="timeline-img" src="http://via.placeholder.com/600x400" alt="A placeholder image" style="display: ${image ? "block" : "none"};">
+          <figcaption id="timeline-card-caption-${total}" class="timeline-card-caption" style="display:none;">Image Caption ${total + 1 }</figcaption>
+        <figure>
+      </div>`;
+  }
+return el.insertAdjacentHTML("beforeend",card);
+}
+
+const timelineSelect = document.querySelector("#timeline-select");
+
+addTimelineCard(".timeline-container", timelineSelect.value,0,false);
+addTimelineCard("#code-timeline",timelineSelect.value,0,true);
+addCard("#timeline-collapse-container", timelineSelect.value,0,"Timeline Card");
+
+hideElements(".timeline-code-img-caption");
+
+//variables counter individual checkboxes checked status c=caption, i=image, l=label
+let cT = 0; let iT= 0;
+
+// collapse form control
+const timelineCollapse  = document.querySelector("#timeline-collapse-container");
+timelineCollapse.onclick = function(e) {
+  checkBoxesChecked(["#timeline-check-img", "#timeline-check-caption"], ["imgT", "captionT"])
+  let totalForms = this.childElementCount;
+  let timelineElements = [];
+  let eId = e.target.id;
+  console.log(eId);
+  let _id = eId.slice(-1);
+  if (!eId) {
+    return;
+  } else {
+    // individual arrows select
+    // processArrows(false, eId,"#icon",_id),
+
+    // individual caption checkbox
+    eId === `timeline-check-caption-${_id}` ?
+      (
+        timelineElements = [`#timeline-card-title-${_id}`,`#timeline-caption-form-${_id}`,`#timeline-code-title-tag-${_id}`],
+        processCheckBox(`#timeline-check-caption-${_id}`,timelineElements),
+        // get if caption is checked
+        captionT ? cT = 3 : "",
+        document.querySelector(`#timeline-check-caption-${_id}`).checked
+        ? ( cT++, cT == totalForms ? tickCheckBoxes(["#timeline-check-caption"], [true], ["All Caption Titles"]) : "")
+        : (cT--, cT < totalForms ? tickCheckBoxes(["#timeline-check-caption"], [false], ["All Caption Titles"]) : "")
+      ) : "";
+
+    // individual image checkbox
+    eId === `timeline-check-img-${_id}` ?
+      (
+        timelineElements = [`#timeline-img-${_id}`,`#timeline-img-form-${_id}`,`#timeline-form-checkbox-img-caption-${_id}`,`#timeline-card-caption-${_id}`, `#timeline-code-img-${_id}`],
+        processCheckBox(`#timeline-check-img-${_id}`,timelineElements),
+        // get if image is checked
+        imgT ? iT = 3 : "",
+        document.querySelector(`#timeline-check-img-${_id}`).checked
+        ? ( iT++, iT == totalForms ? tickCheckBoxes(["#timeline-check-img"], [true], ["All Images"]) : "")
+        : (iT--, iT < totalForms ? tickCheckBoxes(["#timeline-check-img"], [false], ["All Images"]) : "")
+      ) : "" ;
+
+    // individual image caption checkbox
+    eId === `timeline-check-img-caption-${_id}` ?
+      (
+        timelineElements = [`#timeline-img-caption-${_id}`,`#timeline-img-caption-form-${_id}`, `#timeline-card-caption-${_id}`,`#timeline-code-img-caption-${_id}`],
+        processCheckBox(`#timeline-check-img-caption-${_id}`,timelineElements)
+      ) : "" ;
+
+    // individual highlight checkbox
+    document.querySelector(`#timeline-check-highlight-${_id}`).onclick = function() {
+      this.checked ?
+      (
+        showElements(`#timeline-code-highlight-${_id}`, ""),
+        addClass(`#timeline-card-${_id}`,["highlighted"],"highlighted")
+      ) :
+        (
+          hideElements(`#timeline-code-highlight-${_id}`),
+          removeClass(`#timeline-card-${_id}`,["highlighted"])
+        )
+    }
+  }
+}
+
+// process the changes on selection
+timelineSelect.onchange = function() {
+  let current = timelineCollapse.childElementCount;
+  let selVal = this.value;
+  let maxValue = 8;
+  let newValue = diff(current, selVal);
+
+  //check if selection <= maximum (8) && if selection.value > current
+  ((newValue + current <= maxValue) && (selVal > current)) ?
+  (
+    addCard("#timeline-collapse-container", newValue,current,"Timeline Card"),
+    addTimelineCard(".timeline-container",newValue,current,false),
+    addTimelineCard("#code-timeline",newValue,current,true)
+  ) :
+  (
+    removeCards(["#timeline-collapse-container", ".timeline-container","#code-timeline"],newValue)
+  )
+};
+
+// toggle ALL images and individual checkboxes show on image checkbox change
+const timelineImageElements = ['.card-image', '.timeline-img-form','.timeline-form-checkbox-img-caption', '.timeline-code-img','.timeline-code-caption'];
+processCheckBox("#timeline-check-img",timelineImageElements);
+
+// toggle ALL captions and individual checkboxes show on caption checkbox change
+const timelineCaptionElements = ['h4.card-title','.timeline-caption-form','.timeline-code-title-tag'];
+processCheckBox("#timeline-check-caption",timelineCaptionElements);
+
+processCollapseForm("#timeline-collapse-container","https://via.placeholder.com/600x400", "Alternative text")
+
+/***************************************************
+ * carousel, process and timeline general functions
+ ***************************************************/
+
+// addCard form to collapse area
+// -toSection: section the card/s will be appended //  -cardNum : number of cards // -component: component function is working on (crs,prcss, geshi, quo, etc)
+// captionChecked: if true caption displays 'block' : displays 'none'
+
+function addCard(toSection, cardNum, current, type = "Card") {
+  let component = toSection.slice(1,toSection.indexOf("-"));
+  let total = 0;
+  let xVar = true;
+  // checks whether the checkBoxesArray is checked or not and returns/assign a name(second array[variables]) for each of the checkbox elements.
+  component == "crs"  ? checkBoxesChecked([`#crs-check-caption`], ["caption"]) : "";
+  component == "timeline" ? checkBoxesChecked([`#timeline-check-img`,`#timeline-check-caption`], ["image","caption"]) : "";
+
+  let card = "";
+  for (let i = 0; i < cardNum; i++){
+    total = i + current;
+    card += `<div class="collapse-card ${total == 0 ? "" : "collapsed"} ${component}-collapse-card" id="${component}-collapse-card-${total}">
+    <div class="collapse-header">
+      <button class="btn btn-link" aria-expanded="false">
+        <h5 class="h4">${type} ${total + 1}</h5>
+      </button>
+    </div>
+    <div class="collapse-body">
+    <form>`;
+    component == "crs"
+      ? card += `${createCheckboxes(["caption"],component,total,[caption],["Caption Title"])}
+                ${createFields(["src","alt"],component,total,["Image source:", "Alternative text:"],["Image source", "Image description"], type)}
+                ${createFields(["title"], component, total, ["Caption title:"],["Caption title"], type, true)}`
+      : " ";
+    component == "timeline"
+      ? card += `${createCheckboxes(["highlight", "caption", "img", "img-caption",],component,total,[false, caption, image, false],["Highlight card", "Caption title", "Image", "Image caption"])}
+                ${createFields(["date", "title"], component, total, ["Date label:", "Caption title:"],["Date label", "Caption title"], type, true)}
+                <div class="form-group ${component}-img-form" id="${component}-img-form-${total}" style="">
+                ${createFields(["src","alt","caption"],component,total,["Image source:", "Alternative text:", "Image caption:"],["Image source", "Image description", "Caption title"], type)}
+                </div>`
+      : " ";
+
+    card += `</form></div></div>`;
+
+  }
+    return document.querySelector(toSection).insertAdjacentHTML("beforeend",card);
+
+}
+
+// create multiple fields
+function createFields(names = [], comp, tot, labelText =[], placeholder =[],type, bodyField = false) {
+  let field = `<div class="input-group mb-3">`;
+  names.forEach((n,i) => {
+   field +=
+   `${n == "title" ? `<div class="form-group ${comp}-caption-form" style="display:block" id="${comp}-caption-form-${tot}">` : ""}
+   ${n == "caption" ? `<div class="form-group ${comp}-img-caption-form" style="display:none" id="${comp}-img-caption-form-${tot}">` : ""}
+    <label for="${comp}-${n}-${tot}">${labelText[i]}</label>
+    <input type="text" class="form-control" id="${comp}-${n}-${tot}" aria-label="${comp}-${n}" placeholder="${type} ${placeholder[i]} ${tot + 1}">
+    ${n == "title" ? `</div>` : ""}
+    ${n == "caption" ? `</div>` : ""}`
+  })
+  bodyField
+  ? field += `<label class="input-group-text" for="${comp}-body-${tot}">Body text:</label>
+               <textarea class="form-control" id="${comp}-body-${tot}" aria-label="${comp}-body" placeholder="${type} Body text ${tot + 1}" rows="6"></textarea>`
+  : "";
+ return `${field} </div>`;
+}
+
+// create multiple Checkboxes
+function createCheckboxes(names =[], comp, tot, xVar = [], messageText = []) {
+  let box = `<div class="input-group mb-3">`;
+  names.forEach((n,i) => {
+    box +=
+  `<div class="custom-control custom-checkbox ${comp}-form-checkbox-${n}" id="${comp}-form-checkbox-${n}-${tot}">
+    <input type="checkbox" class="custom-control-input" id="${comp}-check-${n}-${tot}"${xVar[i] == true? " checked" : " unchecked"}>
+    <label class="custom-control-label" id="${comp}-label-${n}-${tot}" for="${comp}-check-${n}-${tot}">${messageText[i]}</label>
+  </div>`;
+  })
+  return `${box}</div>`;
+}
+
+// Remove cards depending on selection
+//  -el: from element array //  -cardNum: number of cards to remove
+const removeCards = (elements = [], cardNum) => {
+  for (let i = 0; i < cardNum; i++){
+      elements.forEach((e) => { document.querySelector(e).lastElementChild.remove(); });
+      //elements.forEach((e) => { Array.from(document.querySelectorAll(e)).forEach((el) => { el.lastChild.remove(); }) });
+  }
+}
+
+// Hide the last element of a group and show the rest -way: "block"(displays block) / "" (just override the "none")
+function hideLast(elements, way = "block"){
+  elements.forEach((e) => { Array.from(document.querySelectorAll(e)).forEach((el,i,a) => { i < a.length -1 ? el.style.display = way : el.style.display = "none"; }) })
+}
+
+// Change different display areas' content on input
+
+function processCollapseForm(formId, source, altText) {
+  document.querySelector(formId).oninput = (e) => {
+    let targetTag = e.target.id;
+    let id = Number(targetTag.slice(-1));
+    let codeTag = document.getElementById(targetTag.replace("-","-code-"));
+    let imgTag = document.getElementById(targetTag.replace("src","img"));
+    let cardTag = document.getElementById(targetTag.replace("-", "-card-"));
+    let fieldName = (targetTag.substring(targetTag.indexOf("-")+1, targetTag.substring(0,targetTag.length -2).length));
+    let fName = fieldName.slice(0,1).toUpperCase() + fieldName.slice(1);
+    let value = document.getElementById(targetTag).value;
+    // default card and code areas elements innerText values
+    let message = fieldName == "caption" ? `Image ${fName} ${id + 1}` : fieldName == "title" ? `Caption ${fName} ${id + 1}` : fieldName == "body" ? `Card ${id + 1} body text` : fieldName == "date" ? `${fName} label ${id + 1}` : "";
+
+    e.target !== e.currentTarget && e.target.classList.contains("form-control") ?
+      (
+        (targetTag.includes("src") && value == "")
+        ? (
+            imgTag.src = source,
+            codeTag.innerText = source
+          ) :
+            (targetTag.includes("alt") && value == "")
+            ? (
+                imgTag.alt = altText,
+                codeTag.innerText = altText
+              ) :
+                (targetTag.includes("caption") || targetTag.includes("title") || targetTag.includes("body") || targetTag.includes("date")) && (value == "")
+                ? (
+                    cardTag.innerText = message,
+                    codeTag.innerText = message
+                  ) :
+            (
+              targetTag.includes("src") || targetTag.includes("alt")
+              ? (
+                  imgTag.src = value,
+                  codeTag.innerText = value,
+                  imgTag.alt = value
+                )
+              :
+                (
+                  codeTag.innerText = value,
+                  cardTag.innerText = value
+                )
+            )
+
+      ) : e.stopPropagation();
+  }
+}
+
+// Toggle on checkbox checked elements in an array
+// -id: checkbox id // -elements: array of elements to show or hide // -label: label id to manipulate
+// -message: label text message,  "Image caption")
+function processCheckBox(selector,elements = []) {
+  let el = document.querySelector(selector);
+  let component = selector.slice(1,selector.indexOf("-"));
+  let lastDigit = selector.slice(-1);
+
+  !isNaN(lastDigit) ?
+  (
+    el.checked ?
+      elements.forEach((e) => { Array.from(document.querySelectorAll(e)).forEach((el) => { el.style.display = ""; }) })
+      : elements.forEach((e) => { Array.from(document.querySelectorAll(e)).forEach((el) => { el.style.display = "none"; }) })
+  ) :
+  (
+    el.onchange = (e) => {
+      let eId = e.target.id;
+      let lastDigit = eId.slice(-1);
+      el.checked ?
+      (
+        elements.forEach((e) => { Array.from(document.querySelectorAll(e)).forEach((el) => { el.style.display = ""; }) }),
+        // check every individual checkbox of the same selector
+        isNaN(lastDigit)
+          ? document.querySelectorAll(`#${component}-collapse-container input[type=checkbox]`)
+            .forEach((ch) => { ch.id.includes(eId) && !ch.id.includes("img-caption") ? ch.checked = true : ch.id.includes("card-caption") })
+            : " it is a number."
+      )
+        : // selected checkbox is not checked
+      (
+        elements.forEach((e) => { Array.from(document.querySelectorAll(e)).forEach((el) => { el.style.display = "none"; }) }),
+        isNaN(lastDigit)
+          ? document.querySelectorAll(`#${component}-collapse-container input[type=checkbox]`)
+            .forEach((ch) => { ch.id.includes(eId) ? (ch.checked = false, hideElements([".timeline-code-img-caption",".timeline-card-caption", ".timeline-img-caption-form"]) ) : " id is not included" })
+            : " it is a number"
+      )
+    }
+  )
+}
+
+// check if elements array as checkBoxes is checked or not and returns variables with their checked values.
+function checkBoxesChecked(checkBoxes = [],names = []){
+let result = [];
+checkBoxes.forEach((ch,i)=> { document.querySelector(ch).checked ? result.push({"name": names[i], "value" : true}) : result.push({"name":  names[i], "value" : false}); })
+result.forEach((ch) => { this[`${ch.name}`] = ch.value ; return this[`${ch.name}`]; });
+}
+
+
+// remove or adds a class on check and change its label text
+function replaceClass (id,element,_class,label, message) {
+  let _label = document.querySelector(label);
+  let el = document.querySelectorAll(element);
+  !id.checked ?
+    (
+      el.forEach((e) => { e.classList.add(_class); }),
+      _label.innerText = message
+    ) :
+    (
+      el.forEach((e) => {  e.classList.remove(_class); }),
+      _label.innerText = message
+    )
+}
+
+// replace an oldClass with a newClas given an elementId group
+function switchClass(_element, oldClass = [], newClass) {
+  el = document.querySelectorAll(_element);
+  el.forEach((e) => {
+    e.classList.contains(newClass)
+    ? oldClass.forEach((oC) => { e.classList.remove(oC) })
+    : (e.classList.add(newClass), oldClass.forEach((oC) => { e.classList.remove(oC) })) })
+}
+
+// Adds a class/es to an element group if a given className is already contained.
+function addClass(_element, className = [], classContained) {
+  let el = document.querySelectorAll(_element);
+  el.forEach((e) => {
+    e.classList.contains(classContained)
+    ? className.forEach((cN) => { e.classList.add(cN) })
+    : (e.classList.add(classContained)); });
+}
+
+// Removes a group of classes
+function removeClass(_element, classNames = []){
+  let el = document.querySelectorAll(_element);
+  el.forEach((e) => { classNames.forEach((c) => { e.classList.remove(c); }); });
+}
+
+// hide a group of elements
+function hideElements(selector) {
+  document.querySelectorAll(selector).forEach((e) => { e.style.display = "none"; });
+}
+
+// shows a group of elements
+function showElements(selector, way = "block") {
+  let el = document.querySelectorAll(selector);
+  el.length > 1
+    ? el.forEach((e) => { e.style.display = way })
+    : document.querySelector(selector).style.display = way;
+}
+
+// writes messages to a group of elements
+function writeText(elements = [],message){
+  elements.forEach((el) => { Array.from(document.querySelectorAll(el)).forEach((e) => { e.innerText = message; }); });
+}
+
+function tickCheckBoxes(checkBoxes = [], values = [], labels = []) {
+  checkBoxes.forEach((ch,i) => { document.querySelector(ch).checked = values[i]; document.querySelector(ch.replace("check", "label")).innerText = labels[i] });
+}
+
 
 /**********************************
  * general functions              *
@@ -1484,6 +2245,7 @@ copyCode("cd");
 copyCode("crsl");
 copyCode("col");
 copyCode("dl");
+copyCode("fb");
 copyCode("geshi");
 copyCode("ib");
 copyCode("ls");
@@ -1494,6 +2256,8 @@ copyCode("ts");
 copyCode("va");
 copyCode("vd");
 copyCode("test");
+copyCode("crs");
+copyCode("timeline");
 
 // on copy code button click
 function copyCode(component) {
@@ -1503,18 +2267,18 @@ function copyCode(component) {
     validity = "valid";
     altTextValidity = "valid";
     // for carousel, check alt text
-    if (component == "crsl" && $("#crsl-check-img").hasClass("checked")) {
+    if (component == "crs") {
       altTextForms = [];
-      $(".crsl-slide-form").each(function() {
+      $(".crs-slide-form").each(function() {
         altTextForms.push($(this));
       });
       validateForms(altTextForms);
-      altTextValidity == "invalid" ? $("#crsl-alt-text-alert").removeClass("d-none") : $("#crsl-alt-text-alert").addClass("d-none");            
+      altTextValidity == "invalid" ? $("#crs-alt-text-alert").removeClass("d-none") : $("#crs-alt-text-alert").addClass("d-none");
     }
     validateForms(componentForms);
     if (validity === "invalid") return;
     // copy code onto clipboard
-    str = $("#" + component + "-preview-pane").html();
+    str = document.querySelector("#" + component + "-print-code").innerText;
     function listener(event) {
       event.clipboardData.setData("text/html", str);
       event.clipboardData.setData("text/plain", str);
@@ -1538,5 +2302,3 @@ function validateForms(forms) {
     }
   });
 }
-
-

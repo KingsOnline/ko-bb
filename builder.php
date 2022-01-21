@@ -10,14 +10,22 @@
   </head>
   <body>
     <main>
-    <h1>KO Single-platform Bootstrap Builder</h1>
-    <div>
+      <h1>KO Single-platform Bootstrap Builder</h1>
       <div>
+        <div class="alert alert-btw hide-for-chrome" role="alert">
+          <p>As the Builder performs best on Google Chrome, it would be
+          advisable to switch to this browser if possible. If you continue
+          to encounter any problems whilst on Chrome, view the FAQ tab to
+          find out how to report an issue.</p>
+          </div>
+        <div>
         <p class="header">Select the component you wish to build:</p>
         <ul class="nav nav-tabs">
           <?php
-            $components = array('Carousel', 'Collapse', 'Timeline', 'Table', 'Transcript', 'Card', 'List',
-            'Blockquote', 'Infobox', 'View/hide', 'Academic note', 'Audio', 'Video', 'Download');
+            $components = array('Carousel', 'Collapse', 'Timeline', 'Table',
+            'Transcript', 'Card', 'List', 'Blockquote', 'Infobox',
+            'View/hide', 'Academic note', 'Audio', 'Video', 'Download',
+            'Float box');
             sort($components);
             foreach ($components as $component) {
               $id = strtolower(str_replace(' ','',str_replace('/','',$component)));
@@ -38,6 +46,7 @@
           <?php include('components/carousel.php'); ?>
           <?php include('components/collapse.php'); ?>
           <?php include('components/download.php'); ?>
+          <?php include('components/floatbox.php'); ?>
           <?php include('components/infobox.php'); ?>
           <?php include('components/list.php'); ?>
           <?php include('components/table.php'); ?>
@@ -49,7 +58,7 @@
         </div>
       </section>
     </main>
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://kit.fontawesome.com/ea529b88ed.js"></script>
     <script src="https://git.iddkingsonline.com/designsystem-dev/js/main.js"></script>
     <script src="js/script.js"></script>
