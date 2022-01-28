@@ -36,7 +36,7 @@
                 </select>
               </div>
             </div>
-            <div class="form-group" id="ib-title-form">
+            <div class="form-group" id="ib-title-form" style="display: none;">
               <label for="ib-title">Info box title</label>
               <input type="text" class="form-control" id="ib-df-title" placeholder="Info box title">
             </div>
