@@ -58,9 +58,9 @@
           </div>
           <div class="code-box">
             <pre class="code-text">
-<span id="ib-print-code"><span class="code-open-tag">&lt;div&#32;class&#61;&#34;<span id="code-ib-alert-class">alert </span><span id="code-ib-type">alert-instructional</span><span id="code-ib-alert-role"></span>&#34;<span id="code-ib-alert-aria-label">alert</span>&gt;</span>
+<span id="ib-print-code"><span class="code-open-tag">&lt;div&#32;class&#61;&#34;<span id="code-ib-alert-class">alert </span><span id="code-ib-type">alert-instructional</span><span id="code-ib-alert-role"></span>&#34;<span id="code-ib-alert-aria-label">&#32;aria-label&#61;&#34;alert&#34;</span>&gt;</span>
   <span class="code-open-tag">&lt;div&gt;</span><span id="code-ib-title-open"></span><span id="code-ib-title-text"></span><span id="code-ib-title-close"></span><span id="code-ib-body">
-    <span id="code-ib-body-open">&lt;p&gt;&lt;span role&#61;&#34;text&#34;&gt;&lt;span class&#61;&#34;sr-only&#34;&gt;Note:&lt;/span&gt;</span><span id="code-ib-body-text">Info box body text</span><span id="code-ib-body-close">&lt;&#47;p&gt;</span></span><span id="code-ib-caption"></span>
+    <span id="code-ib-body-open">&lt;p&gt;&lt;span role&#61;&#34;text&#34;&gt;&lt;span class&#61;&#34;sr-only&#34;&gt;Note:&lt;/span&gt;</span><span id="code-ib-body-text">Info box body text</span><span id="code-ib-body-close">&lt;&#47;span&gt;&lt;&#47;p&gt;</span></span><span id="code-ib-caption"></span>
   <span class="code-close-tag">&lt;&#47;div&gt;</span>
 <span class="code-close-tag">&lt;&#47;div&gt;</span></span>
             </pre>
