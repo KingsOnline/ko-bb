@@ -1,7 +1,7 @@
 <div class="component-content" id="component-list">
   <div class="component-header">
     <h2 class="component-title">List</h2>
-    <p><a href="https://keats.kcl.ac.uk/mod/book/view.php?id=3072535&chapterid=240608" target="_blank">Design System guidance and examples</a></p>
+    <p><a href="https://keats.kcl.ac.uk/mod/book/view.php?id=3072535&chapterid=528863" target="_blank">Design System guidance and examples</a></p>
   </div>
   <div class="component-body container">
     <div class="row">
@@ -10,9 +10,9 @@
           <h3>Options</h3>
           <p>Complete the following fields:</p>
           <form>
-            <div class="form-row">
-              <div class="form-group col-md-6">
-                <div class="input-group">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="input-group mb-3">
                   <div class="input-group-prepend">
                     <label class="input-group-text" for="ls-type">Type of List</label>
                   </div>
@@ -22,8 +22,8 @@
                   </select>
                 </div>
               </div>
-              <div class="form-group col-md-6">
-                <div class="input-group">
+              <div class="col-md-6">
+                <div class="input-group mb-3">
                   <div class="input-group-prepend">
                     <label class="input-group-text" for="ls-item-no">No. of list items</label>
                   </div>
@@ -59,7 +59,6 @@
         <section class="component-code">
           <div class="code-header">
             <h3 class="code-title">Code</h3>
-            <button class="btn btn-secondary" id="copy-ls-code">Copy Code</button>
           </div>
           <div class="code-box">
 <pre class="code-text"><span id="ls-print-code"><span class="code-open-tag">&lt;<span class="code-ls-tag">ul</span><span id="code-ls-custom-class"></span>&gt;</span><span id="code-ls-items"></span>

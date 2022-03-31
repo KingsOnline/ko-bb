@@ -13,12 +13,11 @@
           <h3>Options</h3>
           <p>Select your options:</p>
           <form>
-            <div class="form-row">
-              <div class="form-group col-md-12">
+            <div class="row mb-3">
+              <div class="col col-md-4">
                 <div class="input-group">
                   <div class="input-group-prepend">
-                    <span class="input-group-text">No. of</span>
-                    <label class="input-group-text" for="tab-col-no">columns</label>
+                    <label class="input-group-text" for="tab-col-no">No. of columns</label>
                   </div>
                   <select class="custom-select" id="tab-col-no">
                     <option value="1">1</option>
@@ -32,8 +31,12 @@
                     <option value="9">9</option>
                     <option value="10">10</option>
                   </select>
+                </div>
+              </div>
+              <div class="col col-md-8">
+                <div class="input-group">
                   <div class="input-group-prepend">
-                    <label class="input-group-text" for="tab-row-no">rows</label>
+                    <label class="input-group-text" for="tab-row-no">No. of rows</label>
                   </div>
                   <select class="custom-select" id="tab-row-no">
                     <option value="1">1</option>
@@ -49,7 +52,9 @@
                   </select>
                 </div>
               </div>
-              <div class="form-group col-md-12">
+            </div>
+            <div class="row mb-3">
+              <div class="col col-md-4">
                 <div class="input-group">
                   <div class="input-group-prepend">
                     <label class="input-group-text" for="tab-width">Width</label>
@@ -60,7 +65,7 @@
                   </select>
                 </div>
               </div>
-              <div class="form-group col-md-12">
+              <div class="col col-md-8">
                 <div class="input-group">
                   <div class="input-group-prepend">
                     <label class="input-group-text" for="vertical-align">Vertical align</label>
@@ -94,7 +99,6 @@
         <section class="component-code">
           <div class="code-header">
             <h3 class="code-title">Code</h3>
-            <button class="btn btn-secondary" id="copy-tab-code">Copy Code</button>
           </div>
           <div class="code-box">
             <pre class="code-text">

@@ -2,6 +2,11 @@
   <div class="component-header">
     <h2 class="component-title">FAQs</h2>
   </div>
+  <div class="alert alert-btw" role="alert">
+    <p>The Builder performs best on Google Chrome so it would be advisable
+    to switch to this browser if possible. If you continue to encounter any
+    problems on Chrome, view the FAQ tab to find out how to report an issue.</p>
+  </div>
   <div class="component-body container">
     <div class="collapse-container">
       <div class="collapse-card collapsed">
@@ -94,8 +99,8 @@ function loadjs(url) {
                 </ul>
                 <h4>Float box images</h4>
                 <ul>
-                  <li><p><a href="https://keats.kcl.ac.uk/mod/book/view.php?id=3118035&chapterid=387530#right-aligned-images">Right aligned images</a></p></li>
-                  <li><p><a href="https://keats.kcl.ac.uk/mod/book/view.php?id=3118035&chapterid=387530#small-images">Small images</a></p></li>
+                  <li><p><a href="https://keats.kcl.ac.uk/mod/book/view.php?id=3118035&chapterid=520185#right-aligned-images">Right aligned images</a></p></li>
+                  <li><p><a href="https://keats.kcl.ac.uk/mod/book/view.php?id=3118035&chapterid=520185#small-images">Small images</a></p></li>
                 </ul>
               </div>
               <div class="col-md-3">
@@ -112,8 +117,7 @@ function loadjs(url) {
               </div>
               <div class="col-md-3">
                 <h4>Typography</h4>
-                <p><a
-          href="https://keats.kcl.ac.uk/mod/book/view.php?id=3072535&chapterid=245100">Captions</a></p>
+                <p><a href="https://keats.kcl.ac.uk/mod/book/view.php?id=3072535&chapterid=245100">Captions</a></p>
               </div>
             </div>
           </div>

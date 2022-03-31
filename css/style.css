@@ -21,6 +21,10 @@ main {
 }
 input[type="text"] {
   height: auto;
+  width: calc(100% - 14px);
+}
+input[type="radio"] {
+  margin-right: 0;
 }
 input[type="radio"] {
   margin-right: 0;
@@ -73,6 +77,24 @@ img {
 .component-content.selected {
   display: block;
 }
+@media only screen and (min-width: 1200px) {
+  .component-content .container {
+    max-width: none;
+  }
+}
+.component-content .container {
+  padding: 0;
+}
+.component-content .container > .row {
+  margin-left: -1.5rem;
+  margin-right: -1.5rem;
+}
+.component-content .container > .row > .col,
+.component-content .container > .row > [class^="col-"],
+.component-content .container > .row > [class*=" col-"] {
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
 .option {
   border-top: 1px solid rgba(0,0,0,.125);  
   align-items: center;
@@ -119,6 +141,12 @@ textarea {
   display: flex;
   justify-content: space-between;
   margin-bottom: 0;
+}
+.code-header button::before {
+ font-family: "Font Awesome 5 Free";
+ font-weight: 900;
+ margin-right: 0.375rem;
+ content: "\f0c5";
 }
 h3.code-title {
   padding-top: .6rem;
@@ -186,6 +214,18 @@ pre {
 .alert-nope > :first-child::before {
   content: '\f236';
   padding: 0 2px;
+}
+
+/* hide the browser advice alert for chrome */
+@media screen and (-webkit-min-device-pixel-ratio:0) and (min-resolution:.001dpcm) {
+  .hide-for-chrome {
+    display: none;
+  }
+}
+@-moz-document url-prefix() {
+  .hide-for-chrome {
+    display: block;
+  }
 }
 
 #component-faqs a {

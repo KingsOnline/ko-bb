@@ -10,8 +10,8 @@
           <h3>Options</h3>
           <p>Complete the following fields:</p>
           <form>
-            <div class="form-row">
-              <div class="form-group col-md">
+            <div class="row">
+              <div class="col">
                 <div class="input-group mb-3">
                   <div class="input-group-prepend">
                      <label class="input-group-text" for="vd-media-type">Media type</label>
@@ -23,7 +23,7 @@
                   </select>
                 </div>
               </div>
-              <div class="form-group col-md-7" id="vd-player-size-form">
+              <div class="col" id="vd-player-size-form">
                 <div class="input-group mb-3">
                   <div class="input-group-prepend">
                      <label class="input-group-text" for="vd-player-size">Player Size</label>
@@ -52,7 +52,6 @@
         <section class="component-code">
           <div class="code-header">
             <h3 class="code-title">Code</h3>
-            <button class="btn btn-secondary" id="copy-vd-code">Copy Code</button>
           </div>
           <div class="code-box">
             <pre class="code-text"><span id="vd-print-code"><span class="code-open-tag">&lt;div&#32;class&#61;&#34;embed&#45;responsive&#32;embed&#45;responsive&#45;<span id="code-vd-player-size">400by285</span>&#34;&gt;</span>

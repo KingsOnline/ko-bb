@@ -1,7 +1,7 @@
 <div class="component-content" id="component-viewhide">
   <div class="component-header">
     <h2 class="component-title">View/hide</h2>
-    <p><a href="https://keats.kcl.ac.uk/mod/book/view.php?id=3118036" target="_blank">Design System guidance and examples</a></p>
+    <p><a href="https://keats.kcl.ac.uk/mod/book/view.php?id=4863227" target="_blank">Design System guidance and examples</a></p>
   </div>
   <div class="component-body container">
     <div class="row">
@@ -32,7 +32,7 @@
               <div class="input-group">
                 <label class="input-group-text" for="va-type">Type</label>
               </div>
-              <select id="va-type">
+              <select id="va-type" class="mb-3">
                 <option value="answer">View answer</option>
                 <option value="description">View description</option>
                 <option value="feedback">View feedback</option>
@@ -59,7 +59,6 @@
         <section class="component-code">
           <div class="code-header">
             <h3 class="code-title">Code</h3>
-            <button class="btn btn-secondary" id="copy-va-code">Copy Code</button>
           </div>
           <div class="code-box">
             <pre class="code-text">

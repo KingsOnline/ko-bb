@@ -1,6 +1,24 @@
 today = new Date();
 dateString = today.toDateString();
 
+componentAbbrs = {
+  "academicnote": "an",
+  "audio": "au",
+  "blockquote": "quo",
+  "card": "cd",
+  "carousel": "crs",
+  "collapse": "col",
+  "download": "dl",
+  "floatbox": "fb",
+  "infobox": "ib",
+  "list": "li",
+  "table": "tab",
+  "timeline": "timeline",
+  "transcript": "ts",
+  "video": "vd",
+  "viewhide": "va",
+};
+
 $(document).ready(function() {
   preview("an");
   // default audio preview on load
@@ -30,14 +48,19 @@ $(document).ready(function() {
   $("#vd-preview-pane").html('<div class="embed-responsive embed-responsive-400by285"><iframe id="kaltura_player" src="https://cdnapisec.kaltura.com/p/2368101/sp/236810100/embedIframeJs/uiconf_id/42876062/partner_id/2368101?iframeembed=true&playerId=kaltura_player&entry_id=0_m83muzm5&flashvars[streamerType]=auto&amp;flashvars[localizationCode]=en&amp;flashvars[leadWithHTML5]=true&amp;flashvars[sideBarContainer.plugin]=true&amp;flashvars[sideBarContainer.position]=left&amp;flashvars[sideBarContainer.clickToClose]=true&amp;flashvars[chapters.plugin]=true&amp;flashvars[chapters.layout]=vertical&amp;flashvars[chapters.thumbnailRotator]=false&amp;flashvars[streamSelector.plugin]=true&amp;flashvars[EmbedPlayer.SpinnerTarget]=videoHolder&amp;flashvars[dualScreen.plugin]=true&amp;flashvars[Kaltura.addCrossoriginToIframe]=true&amp;&wid=1_fejlyov0&amp;flashvars[infoScreen.plugin]=false&amp;flashvars[titleLabel.plugin]=false&amp;flashvars[related.plugin]=false&amp;flashvars[closedCaptions.displayCaptions]=false&amp;flashvars[closedCaptions.layout]=below&amp;flashvars[transcript.plugin]=false&amp;flashvars[IframeCustomPluginCss1]=https://git.iddkingsonline.com/kaltura/kaltura.css" width="400" height="285" allowfullscreen webkitallowfullscreen mozAllowFullScreen allow="autoplay *; fullscreen *; encrypted-media *" frameborder="0" title="Kaltura Player"></iframe></div>');
 });
 
-//display component on nav select
+// display component on nav select
 $(".nav-link").click(function() {
   $("#component-builder").show();
   $(".component-content").each(function() {
     $(this).hide();
   });
   linkId = this.id.slice(5);
+  componentAbbr = componentAbbrs[linkId];
   $("#component-" + linkId).show();
+  // generate 'Copy code' button
+  $(".code-header button").remove();
+  $("#component-" + linkId).find(".code-header")
+    .append(`<button class="btn btn-primary" id="copy-${componentAbbr}-code">Copy code</button`);
 });
 
 /**********************************
@@ -741,7 +764,7 @@ $(document).on("click", "#geshi-check-line-nos", function(event) {
  **********************************/
 
 /*
- strips a string (a name id), from everything but the first word before the choosen character
+ strips a string (a name id), from everything but the first word before the chosen character
   and capitalize it if 3rd parameter false(default). If true, it reverses its functionality.
 */
  function cleanString(string, fromChar, reverse = false) { 
@@ -749,14 +772,19 @@ $(document).on("click", "#geshi-check-line-nos", function(event) {
   if(reverse){
     str ++;
     let clean = string.substr(str,string.length-1);
+    // Instructional alert
     if (clean == "instructional") {
       return "Note";
-    } 
+    // Key concept box
+    } else if (clean == "concept-box") {
+      return "Important";
+    }
     return clean[0].toUpperCase() + clean.slice(1);    
     
   } else if (!reverse){
       let clean = string.substr(0,str);
-      if(clean == "reading") {
+      // Reading box
+      if (clean == "reading") {
         return "Read";
       }
       return clean[0].toUpperCase() + clean.slice(1);
@@ -769,83 +797,81 @@ function replaceString(string, index, replacement) {
 
 // change infobox type
 $("#ib-type").change(function() {
-  $("#code-ib-type").text($(this).val());
+  // empty Alert fields and Editing help caption
   $("#code-ib-alert-class, #code-ib-alert-aria-label, #code-ib-caption").empty();
-  $("#code-ib-title-text").text("Info box title");
-  $(this).val() == "alert-instructional" || $(this).val() == "alert-caution"
+  // reset body text tags
+  $("#code-ib-body-open").text("<p>");
+  $("#code-ib-body-close").text("</p>");
+  // for Module resource block options and Learning outcome box
+  $(this).val().indexOf("mrb-") == 0 | $(this).val().indexOf("learning") == 0
     ? (
-      $("#code-ib-alert-class").text("alert "),
-      $("#code-ib-alert-aria-label").text(' aria-label="alert"'),
-      $(this).val() == "alert-instructional"
-        ? (
-          $("#code-ib-title-open, #code-ib-title-text, #code-ib-title-close").empty(),
-          $("#ib-title-form").hide(),
-          $("#code-ib-body-open").html("&lt;p&gt;&lt;span role&#61;&#34;text&#34;&gt;&lt;span class&#61;&#34;sr-only&#34;&gt;" + cleanString($(this).val(), "-",true) + ": &lt;/span&gt;"),
-          $("#code-ib-body-text").text((!$("#ib-df-title").val() == "") ? $("#ib-df-title").val() : "Info box body text" ),
-          $("#code-ib-body-close").text("</span></p>")
-        )
-        : (
-          $("#ib-title-form").show(),
-          $("#code-ib-body-open").text("<p>"),          
-          $("#code-ib-body-close").text("</p>"),
-          $("#code-ib-title-open").html("\n    &lt;h5&gt;&lt;span role&#61;&#34;text&#34;&gt;&lt;span class&#61;&#34;sr-only&#34;&gt;" + cleanString($(this).val(), "-",true) + ": &lt;/span&gt;"),
-          $("#code-ib-title-close").text("</span></h5>")
-        )
-      )
-    : (
-      $("#code-ib-alert-class, #code-ib-alert-aria-label").empty(),        
-      $(this).val() == "key-concept-box"
-        ? (
-          $("#ib-title-form").hide(),
-          $("#code-ib-title-open, #code-ib-title-text, #code-ib-title-close").empty(),
-          $("#code-ib-body-open").html("&lt;p&gt;&lt;span role&#61;&#34;text&#34;&gt;&lt;span class&#61;&#34;sr-only&#34;&gt;Important: &lt;/span&gt;"),
-          $("#code-ib-body-close").text("</span></p>")
-        )
-        : (
-          $("#ib-title-form").show(),
-          $("#code-ib-title-open").html("\n    &lt;h5&gt;&lt;span role&#61;&#34;text&#34;&gt;&lt;span class&#61;&#34;sr-only&#34;&gt;" + cleanString($(this).val(), "-") + ": &lt;/span&gt;"),
+      typeClass = ($(this).val().slice(4)),
+      typeClass =
+        typeClass == "my-journal"
+          ? "journal"
+          : typeClass == "shared-resources"
+            ? "shared"
+            : typeClass == "social-annotation-files"
+              ? "files"
+              : "learning-outcome",
+      $("#code-ib-type").text(typeClass + "-box"),
+      // hide title form
+      $("#ib-title-form").hide(),
+      $("#code-ib-title-open").html("\n    &lt;h5&gt;"),
+      $("#code-ib-title-text").text(
+      typeClass == "learning-outcome"
+        ? "Learning outcomes"
+        : $(this).val().slice(4).replace(/^(\S)/g, s=>s.toUpperCase()).replace(/-/g," ")),
+      $("#code-ib-title-close").text("</h5>")
+    ) : (
+      // set type as class
+      $("#code-ib-type").text($(this).val()),
+      // show title form
+      $("#ib-title-form").show(),
+      // set title text
+      $("#code-ib-title-text").text((!$("#ib-df-title").val() == "") ? $("#ib-df-title").val() : "Info box title"),
+      // Answer feedback boxes
+      $(this).val().indexOf("feedback") == 0
+        // separate 'feedback box' and answer type classes
+        ? ($("#code-ib-type").text(replaceString($(this).val(), 12, " ")),
+          // set title tags
+          $("#code-ib-title-open").html("\n    &lt;h5&gt;"),
+          $("#code-ib-title-close").text("</h5>"))
+        : // set title tags with role and sr-only span for all other cases
+          ($("#code-ib-title-open").html("\n    &lt;h5&gt;&lt;span role&#61;&#34;text&#34;&gt;&lt;span class&#61;&#34;sr-only&#34;&gt;" + cleanString($(this).val(), "-") + ": &lt;/span&gt;"),
           $("#code-ib-title-close").text("</span></h5>"),
-          $(this).val() == "editing-help-box"
-            ? (
-              $("#code-ib-title-text").text((!$("#ib-df-title").val() == "") ? $("#ib-df-title").val() : "Info box title"),
-              $("#code-ib-body-open").html("&lt;p&gt;"),              
-              $("#code-ib-body-close").text("</p>"),
-              $("#code-ib-caption").text('\n    <p class="caption">Note: This help message is not displayed to students.</p>'))
-            : $(this).val() == "definition-box"
-              ? $("#code-ib-title-text").text((!$("#ib-df-title").val() == "") ? $("#ib-df-title").val() : "Info box title")
-              : $(this).val() == "learning-outcome-box"
-                ? (
-                  $("#code-ib-body-open").text("<p>"),          
-                  $("#code-ib-body-close").text("</p>"),
-                  $("#code-ib-title-open").html("\n    &lt;h5&gt;"),
-                  $("#code-ib-title-close").text("</h5>")        
-                )
-                : $(this).val() ==  "reading-box"
-                  ? (                    
-                    $("#code-ib-body-open").html("&lt;p&gt;"), 
-                    $("#code-ib-body-close").html("&lt;/p&gt;")
-                  )
-                  : $(this).val().includes("feedback-box") 
-                    ? (
-                        $("#code-ib-type").text(replaceString($(this).val(), 12, " ")),
-                        $("#code-ib-title-open").html("\n    &lt;h5&gt;"),                  
-                        $("#code-ib-title-close").text("</h5>"), 
-                        $("#code-ib-body-open").text("<p>"),          
-                        $("#code-ib-body-close").text("</p>")
-                      ) 
-                      : $(this).val() == "media-box" 
-                        ? (
-                            $("#code-ib-body-open").text("<p>"),          
-                            $("#code-ib-body-close").text("</p>")
-                          ) : console.log("foo")
-            ));
+          // for Alert or Key concept box
+          $(this).val().indexOf("alert") == 0 | $(this).val().indexOf("key") == 0
+            ? ($(this).val() == "alert-caution"
+                  // for Caution alert
+                ? $("#code-ib-title-open").html("\n    &lt;h5&gt;&lt;span role&#61;&#34;text&#34;&gt;&lt;span class&#61;&#34;sr-only&#34;&gt;" + cleanString($(this).val(), "-",true) + ": &lt;/span&gt;")
+                  // for Instructional alert or Key concept box
+                : // hide title form
+                  ($("#ib-title-form").hide(),
+                  // remove title
+                  $("#code-ib-title-open, #code-ib-title-text, #code-ib-title-close").empty(),
+                  // body text prepend 'Note/Important: ' span
+                  $("#code-ib-body-open").html("&lt;p&gt;&lt;span role&#61;&#34;text&#34;&gt;&lt;span class&#61;&#34;sr-only&#34;&gt;" + cleanString($(this).val(), "-",true) + ": &lt;/span&gt;"),
+                  $("#code-ib-body-close").text("</span></p>"))
+              ,
+              // add Alert class and aria label
+              $(this).val().indexOf("alert") == 0
+                ? ($("#code-ib-alert-class").text("alert "),
+                  $("#code-ib-alert-aria-label").text(' aria-label="alert"'))
+                : ""
+              )
+            // add help caption for Editing help box
+            : $(this).val() == "editing-help-box"
+              ? $("#code-ib-caption").text('\n    <p class="caption">Note: This help message is not displayed to students.</p>')
+              : console.log("Infobox type not found")
+          )
+      );
   preview("ib");
 });
 
 // update infobox text
 updateText("ib", "#ib-text", "#code-ib-body-text", "Info box body text");
 updateText("ib", "#ib-df-title", "#code-ib-title-text", "Info box title");
-
 
 
 /**********************************
@@ -882,9 +908,9 @@ $("#ls-item-no").on('focus', function() {
 });
 
 // change list type
-$("#ls-type").change(function(data){
-  type = $(this).val();
-  $(".code-ls-tag").text(type);
+$("#ls-type").change(function(){
+  listType = $(this).val();
+  $(".code-ls-tag").text(listType);
   preview("ls");
 });
 
@@ -901,19 +927,19 @@ function initialListItems(maxListItems) {
 
 // create single list item code, shows first card and collapses all others
 function createListItem(i) {
-  return `${ i == 1 ? "" : "  "}<span class="code-ls-item" id="code-ls-item-${i}"><span class="code-open-tag">\n  &lt;li&gt;</span>
-    <span id="code-ls-item-${i}-text">${ !$("#ls-item-" + i + "-text").val() == "" ? $("#ls-item-" + i + "-text").val() : "List item #" + i + " text"}</span>
-  <span class="code-close-tag">&lt;&#47;li&gt;</span></span>`;
+  return `${ i == 1 ? "" : "  "}<span class="code-ls-item" id="code-ls-item-${i}"><span class="code-open-tag">\n  &lt;li&gt;</span><span id="code-ls-item-${i}-text">${ !$("#ls-item-" + i + "-text").val() == "" ? $("#ls-item-" + i + "-text").val() : "List item #" + i + " text"}</span><span class="code-close-tag">&lt;&#47;li&gt;</span></span>`;
 }
 
 // create single card editor card, shows first card and collapses all others
 function createListItemEditorCard(i) {
   return `
-<div class="input-group mb-3" id="ls-item-${i}-card">
-  <div class="input-group-prepend">
+<div class="row input-group mb-3" id="ls-item-${i}-card">
+  <div class="col-md input-group-prepend">
     <span class="input-group-text">${i}</span>
   </div>
-  <input type="text" class="form-control" id="ls-item-${i}-text" aria-label="List item text">
+  <div class="col-md-11">
+    <input type="text" class="form-control" id="ls-item-${i}-text" aria-label="List item text">
+  </div>
 </div>`;
 }
 
@@ -1418,8 +1444,6 @@ $("#ts-type").change(function() {
 });
 
 updateText("ts", "#ts-id", ".code-ts-id", "modname-unitno-transcript-no");
-//updateText("ts", "#ts-body", "#code-ts-body", "foo");
-//updateText("ts", "#ts-link", "#code-ts-link", "#");
 updateText("ts", "#ts-body", "#code-ts-body-text", "Transcript body...");
 
 /**********************************
@@ -1565,50 +1589,46 @@ const addDots = (slideNum = 0, encoded) => {
 
 const addSlides = (toElement, slideNum, current, encoded) => {
     checkBoxesChecked(["#crs-check-caption"], ["caption"]);
-     
-    let slideType = document.querySelector("#crs-type");
-    let imgSrc; 
 
-      slideType.value == "1" ? 
+    let slideType = document.querySelector("#crs-type");
+    let imgSrc;
+
+      slideType.value == "1" ?
       (
         removeClass(".new-carousel",["portrait-carousel"]),
         addClass(".new-carousel",["landscape-carousel"],"new-carousel"),
         writeText([".crs-type"],"landscape"),
-        imgSrc = "https://via.placeholder.com/800x400"       
+        imgSrc = "https://via.placeholder.com/800x400"
       ) :
         (
           removeClass(".new-carousel",["landscape-carousel"]),
           addClass(".new-carousel",["portrait-carousel"],"new-carousel"),
           writeText([".crs-type"],"portrait"),
-          imgSrc = "https://via.placeholder.com/400x400"       
+          imgSrc = "https://via.placeholder.com/400x400"
         )
-    
+
     let total;
     let slide = "";
     for (let i = 0; i < slideNum; i++) { // for encoded generated output: code area
       total = i + current;
-      slide += encoded ? `\n     <span class="crs-code-remove">&#60;li&#62;\n       &#60;figure&#62; 
-          <span class="crs-code-img">&#60;img&#32;src&#61;&#34;<span id="crs-code-src-${total}" class="crs-code-src">${imgSrc}</span>&#34;&#32;alt&#61;&#34;<span id="crs-code-alt-${i}">Alternative&#32;text</span>&#34;&#32;class&#61;&#34;nc&#45;image&#34;&#62;</span>
-            &#60;figcaption&#32;class&#61;&#34;nc&#45;description&#34;&#62;<span class="crs-code-title" id="crs-code-title-tag-${total}">
-              &#60;h5&#62;
-                <span id="crs-code-title-${total}">Caption&#32;title&#32;${total + 1}</span>
-              &#60;/h5&#62;</span>
-              &#60;p&#62;
-                <span id="crs-code-body-${total}">Carousel&#32;slide&#32;${total + 1}&#32;body&#32;text</span>
-              &#60;/p&#62;
-            &#60;/figcaption&#62;
-       &#60;/figure&#62;
-    &#60;/li&#62;</span>`  
+      slide += encoded ? `\n    <span class="crs-code-remove">&#60;li&#62;\n      &#60;figure&#62;
+        <span class="crs-code-img">&#60;img&#32;src&#61;&#34;<span id="crs-code-src-${total}" class="crs-code-src">${imgSrc}</span>&#34;&#32;alt&#61;&#34;<span id="crs-code-alt-${i}">Alternative&#32;text</span>&#34;&#32;class&#61;&#34;nc&#45;image&#34;&#62;</span>
+        &#60;figcaption&#32;class&#61;&#34;nc&#45;description&#34;&#62;<span class="crs-code-title" id="crs-code-title-tag-${total}">
+          &#60;h5&#62;<span id="crs-code-title-${total}">Caption&#32;title&#32;${total + 1}</span>&#60;/h5&#62;</span>
+          &#60;p&#62;<span id="crs-code-body-${total}">Carousel&#32;slide&#32;${total + 1}&#32;body&#32;text</span>&#60;/p&#62;
+        &#60;/figcaption&#62;
+      &#60;/figure&#62;
+    &#60;/li&#62;</span>`
       : // not encoded generated output: preview area
       `<li><figure>
       <img src=${imgSrc} alt="Alternative text" class="nc-image" id="crs-img-${total}">
       \t<figcaption class="nc-description">
       <h5 id="crs-card-title-${total}" style="display: ${caption ?  "" : "none" }">Caption title ${total + 1}</h5>
-      \n\t\t<p id="crs-card-body-${total}">Carousel slide ${total + 1} body text</p>\n\t</figcaption>\n\t</figure>\n\t</li>\n`;      
-      
+      \n\t\t<p id="crs-card-body-${total}">Carousel slide ${total + 1} body text</p>\n\t</figcaption>\n\t</figure>\n\t</li>\n`;
+
       // Adding the dots
       addDots(current + i, encoded);
-    }  
+    }
   return toElement.insertAdjacentHTML("beforeend",slide);
 }
 
@@ -1634,14 +1654,14 @@ document.querySelector(".nc-previous").disabled = true;
 
 // document.querySelector(".nc-previous").onclick = function() {
 //   current.previousElementSibling.classList.add("active");
-//   current.classList.remove("active"); 
-  
+//   current.classList.remove("active");
+
 // }
 
 // document.querySelector(".nc-next").onclick = function() {
 //   current.classList.remove("active");
-//   current.nextElementSibling.classList.add("active");  
- 
+//   current.nextElementSibling.classList.add("active");
+
 // }
 
 
@@ -1664,32 +1684,30 @@ const type = document.getElementById("crs-type");
 let crsType = document.querySelector(".new-carousel").classList;
 const crsCodeType = document.querySelector(".crs-type");
 
-
 type.onchange = () => {
-  type.value == "1" ? 
+  type.value == "1" ?
   (
     removeClass(".new-carousel",["portrait-carousel"]),
     addClass(".new-carousel",["landscape-carousel"],"new-carousel"),
     writeText([".crs-type"],"landscape"),
-    writeText([".crs-code-src"],"https://via.placeholder.com/800x400")
-    //document.querySelectorAll(".nc-image").forEach((i) => { i.src = "https://via.placeholder.com/800x400?text=Landscape:+2:1"; })
-  ) :
-    (
-      removeClass(".new-carousel",["landscape-carousel"]),
-      addClass(".new-carousel",["portrait-carousel"],"new-carousel"),
-      writeText([".crs-type"],"portrait"),
-      writeText([".crs-code-src"],"https://via.placeholder.com/400x400")
-      //document.querySelectorAll(".nc-image").forEach((i) => { i.src = "https://via.placeholder.com/500x500?text=1:1"; })
-    )
+    writeText([".crs-code-src"],"https://via.placeholder.com/800x400"),
+    document.querySelectorAll(".nc-image").forEach((i) => { i.src = "https://via.placeholder.com/800x400?text=Landscape:+2:1"; })
+  ) : (
+    removeClass(".new-carousel",["landscape-carousel"]),
+    addClass(".new-carousel",["portrait-carousel"],"new-carousel"),
+    writeText([".crs-type"],"portrait"),
+    writeText([".crs-code-src"],"https://via.placeholder.com/400x400"),
+    document.querySelectorAll(".nc-image").forEach((i) => { i.src = "https://via.placeholder.com/400x400?text=Portrait:+1:1"; })
+  )
 }
 
 
 let imageChecked = true;
 let captionChecked = true;
-// selection dropdown 
+// selection dropdown
 const selection = document.querySelector("#crs-slide-no");
 // slides will generate here in code area
-const code = document.getElementById("slides-code-crs");  
+const code = document.getElementById("slides-code-crs");
 // slides will generate here in preview area
 const displayCrs = document.querySelector(".nc-gallery");
 
@@ -1704,12 +1722,12 @@ addCard("#crs-collapse-container",selection.value,0, "Slide");
 
 
 // processing
-const crsCaptionElements = ['.nc-description h5','.crs-caption-form','.crs-code-title'];    
+const crsCaptionElements = ['.nc-description h5','.crs-caption-form','.crs-code-title'];
 processCheckBox("#crs-check-caption",crsCaptionElements);
 
 const collapseForm = document.querySelector("#crs-collapse-container");
 const captionCheckBox = document.querySelector("#crs-check-caption");
-  
+
 //Generate cards for the input forms of the collapse and change the preview the code and the form panels on select changing value
 let elements = [code,displayCrs,dots,dotsCode]
 selection.onchange = () => {
@@ -1718,14 +1736,14 @@ selection.onchange = () => {
   let newValue = diff(current, selection.value);
   captionChecked = captionCheckBox.checked;
   //check if selection <= maximum (8) && if selection.value > current
-  (newValue + current <= maxValue) && (selection.value > current) ? 
-  ( 
+  (newValue + current <= maxValue) && (selection.value > current) ?
+  (
     addCard("#crs-collapse-container", newValue, current, "Slide"),
     addSlides(code,newValue,current,true),
     addSlides(displayCrs,newValue,current,false),
     // re-activate next button
     document.querySelector(".nc-next").disabled = false
-  ) : 
+  ) :
   (
     removeCards(["#crs-collapse-container"],newValue),
     removeSlides(elements, newValue)
@@ -1743,7 +1761,7 @@ crsCollapse.onclick = function(e) {
   if (!eId) {
     return;
   } else {
-    
+
     // individual caption checkbox
     eId === `crs-check-caption-${_id}` ?
       (
@@ -1751,322 +1769,22 @@ crsCollapse.onclick = function(e) {
         processCheckBox(`#crs-check-caption-${_id}`,crsElements),
         // get if caption is checked
         captionC ? cC = totalForms : "",
-        document.querySelector(`#crs-check-caption-${_id}`).checked 
-        ? ( cC++, cC == totalForms ? tickCheckBoxes(["#crs-check-caption"], [true], ["All Caption Titles"]) : "") 
+        document.querySelector(`#crs-check-caption-${_id}`).checked
+        ? ( cC++, cC == totalForms ? tickCheckBoxes(["#crs-check-caption"], [true], ["All Caption Titles"]) : "")
         : (cC--, cC < totalForms ? tickCheckBoxes(["#crs-check-caption"], [false], ["All Caption Titles"]) : "")
       ) : "";
- 
-  }     
-    
-}
 
+  }
+
+}
 
 // collapse form fields control
 processCollapseForm("#crs-collapse-container","https://via.placeholder.com/800x400", "Alternative text")
 
 
-/**********************************
- * process                        *
- **********************************/
-
-const addProcessCard = (toElement, cardNum, current, encoded) => {
-  // checks whether the checkBoxesArray is checked or not and returns/assign a name(second array[variables]) for each of the checkbox elements.
-  checkBoxesChecked(["#prcss-check-label","#prcss-check-img","#prcss-check-caption"], ["labelP","imageP","captionP"]);
-  let el = document.querySelector(toElement);
-  cardNum = Number(cardNum);
-  let card = "";
-  for (let i = 0; i < cardNum; i++) { // for encoded generated output: code area
-    let total = i + current;
-    card += encoded ? `   <span class="prcss-listitem">&lt;div class=&quot;step&quot; role=&quot;listitem&quot;&gt; 
-      &lt;div class=&quot;card process-card<span id="prcss-code-highlight-${total}" style="display: none"> highlight</span>&quot;&gt;<span class="prcss-code-img" id="prcss-code-img-${total}" style="display:${imageP ? "" : "none"};"> 
-        &#60;img&#32;src&#61;&#34;<span id="prcss-code-src-${total}">http:&#47;&#47;via.placeholder.com&#47;300x300</span>&#34;&#32;alt&#61;&#34;<span id="prcss-code-alt-${total}">Alternative&#32;text</span>&#34;&#62;</span>
-        &lt;div class=&quot;card-body&quot;&gt;<span class="prcss-code-title-tag" id="prcss-code-title-tag-${total}" style="display:${captionP ? "" : "none"};"> 
-          &#60;h4 class=&quot;card-text&quot;&#62;
-            <span id="prcss-code-title-${total}">Caption&#32;title&#32;${total + 1}</span>
-          &#60;/h4&#62;</span>
-          &lt;p class=&quot;card-text&quot;&gt;
-            <span id="prcss-code-body-${total}">Process&#32;card&#32;${total + 1}&#32;body&#32;text</span>
-          &lt;/p&gt; 
-        &lt;/div&gt; 
-      &lt;/div&gt;<span class="code-connector-container" style="">      &lt;div class=&quot;connector-container no-gutters&quot;&gt; 
-          &lt;div class=&quot;process-label<span class="prcss-label-sr" id="prcss-label-sr-${total}" style="display:${labelP ? "none" : ""};"> sr-only</span>&quot;&gt;<span class="top-label-text" id="top-label-text-${total}">Leads to</span>&lt;/div&gt;
-          &lt;div class=&quot;icon<span class="prcss-icon-type" id="prcss-icon-type-${total}"> arrow-down</span>&quot; aria-hidden=&quot;true&quot;&gt;&lt;/div&gt;<span class="bottom-label" id="bottom-label-${total}">
-          &lt;div class=&quot;process-label<span class="prcss-label-sr"> sr-only</span>&quot;&gt;<span class="bottom-label-text" id="bottom-label-text-${total}">and is caused by</span>&lt;/div&gt;</span>
-      &lt;/div&gt;\n   &lt;/div&gt;</span></span>`  
-    : // not encoded generated output: preview area
-    `<div class="step" role="listitem">
-      <div class="card process-card" id="prcss-card-${total}">
-        <img id="prcss-img-${total}" src="http://via.placeholder.com/300x300?text=Arrow+down:+2:1" alt="A placeholder image" style="display: ${imageP ? "block" : "none"};">
-        <div class="card-body">
-          <h4 class="card-text" id="prcss-card-title-${total}" style="display:${captionP ? "block" : "none"};">Caption title ${total+ 1}</h4>
-          <p class="card-text" id="prcss-card-body-${total}">Process card ${total+ 1} body text</p>
-        </div>
-      </div>
-      <div class="connector-container no-gutters">
-        <div class="process-label ${labelP ? '' : 'sr-only'} top-label" id="top-label-${total}">Leads to</div>
-        <div class="icon arrow-down" id="icon-${total}" aria-hidden="true"></div>
-        <div class="process-label bottom-label ${labelP ? '' : 'sr-only'}" id="bottom-label-${total}">and is caused by</div>
-      </div>
-    </div>`;
-  }
-return el.insertAdjacentHTML("beforeend",card);
-}
-
-
-
- document.body.onload = function() {
-   hideElements(".bottom-label")
- }
-
-const prcssLabelCheck = document.querySelector("#prcss-check-label");
-// All Process Arrow Labels show or hide or change onclick
-prcssLabelCheck.onclick = function() {
-  
-  let collapseCheckboxes = document.querySelectorAll("#prcss-collapse-container input[type=checkbox]");
-  let arrowType = document.querySelector("#prcss-arrows");
-  
-  this.checked ?
-  ( // set all label checkboxes to true
-    collapseCheckboxes.forEach((ch) => { 
-      ch.id.includes(this.id) 
-      ? ( ch.checked = true, 
-          document.getElementById(ch.id.replace("check","label")).innerText = "Label") 
-      : " id is not included" }),    
-    replaceClass(this,'.process-label','sr-only','#prcss-label-label','All Labels'),
-    // remove sr-only class from the code area
-    hideElements(".prcss-label-sr"),
-    // hide the bottom label unless arrow is double
-    arrowType.value == "3"
-      ? (showElements(".bottom-label", ""), 
-        writeText([".top-label",".top-label-text"], "causes"))  
-      : (hideElements(".bottom-label"), writeText([".top-label"], "Leads to")),
-    // on arrow type 4 change the top label
-    arrowType.value == "4"
-      ? (hideElements(".bottom-label"), writeText([".top-label",".top-label-text"], "relates to"))  
-      : ("")
-  ) : 
-  (
-    // set all label checkboxes to false
-    collapseCheckboxes.forEach((ch) => { 
-      ch.id.includes(this.id) 
-      ? (ch.checked = false, 
-        document.getElementById(ch.id.replace("check","label")).innerText = "Label") 
-      : " id is not included" }),
-
-    replaceClass(this,'.process-label','sr-only','#prcss-label-label','All Labels'),
-    // add sr-only class from the code area
-    showElements(".prcss-label-sr", ""),
-    // hide the second label for the arrows
-    hideElements(".bottom-label")    
-  )
-}
-
-// All Arrows and labels manipulation
-processArrows(true, "prcss-arrows",".icon","");
-
-
-// select element
-const prcssSelect = document.querySelector("#prcss-select");
-
-// process the changes on selection
-prcssSelect.onchange = function() {
-  let current = prcssCollapse.childElementCount;
-  let selVal = this.value;
-  let maxValue = 8;
-  let newValue = diff(current, selVal);
-
-  //check if selection <= maximum (8) && if selection.value > current
-  ((newValue + current <= maxValue) && (selVal > current)) ? 
-  (
-    addCard("#prcss-collapse-container", newValue,current,"Process Card"),
-    addProcessCard(".process-container",newValue,current,false),
-    addProcessCard("#code-prcss",newValue,current,true)    
-  ) : 
-  (
-    removeCards(["#prcss-collapse-container", ".process-container","#code-prcss"],newValue)
-  )
-  hideLast([".connector-container",".code-connector-container",".prcss-arrow-select",".prcss-form-checkbox-label"]);
-};
-
-
-// toggle ALL images and individual checkboxes show on image checkbox change
-const prcssImageElements = ['.process-card img', '.prcss-img-form', '.prcss-code-img'];
-processCheckBox("#prcss-check-img",prcssImageElements);
-// toggle ALL captions and individual checkboxes show on caption checkbox change
-const prcssCaptionElements = ['h4.card-text','.prcss-caption-form','.prcss-code-title-tag'];    
-processCheckBox("#prcss-check-caption",prcssCaptionElements);
-
-//variables counter individual checkboxes checked status c=caption, i=image, l=label
-
-
-let iP = 0; let lP = 0; let cP = 0;
-// imgP ? iP = 3 : iP = 0; 
-// captionP ? cP = 3 : cP; 
-// labelP ? lP = 2 : lP = 0;
-// console.log(lP,iP,cP);
-
-hideElements(".bottom-label", "");
-
-
-// collapse form control
-const prcssCollapse  = document.querySelector("#prcss-collapse-container");
-prcssCollapse.onclick = function(e) {
-  checkBoxesChecked(["#prcss-check-label", "#prcss-check-img", "#prcss-check-caption"], ["labelP", "imgP", "captionP"])
-  let totalForms = this.childElementCount;
-  let prcssElements = [];
-  let eId = e.target.id;
-  console.log(eId);
-  let _id = eId.slice(-1);
-  if (!eId) {
-    return;
-  } else {
-    // individual arrows select 
-    processArrows(false, eId,"#icon",_id),       
-    
-    // individual caption checkbox
-    eId === `prcss-check-caption-${_id}` 
-    ? (
-        prcssElements = [`#prcss-card-title-${_id}`,`#prcss-caption-form-${_id}`,`#prcss-code-title-tag-${_id}`],
-        processCheckBox(`#prcss-check-caption-${_id}`,prcssElements),
-        // get if caption is checked
-        captionP ? cP = totalForms : "",
-        document.querySelector(`#prcss-check-caption-${_id}`).checked 
-        ? ( cP++, cP == totalForms ? tickCheckBoxes(["#prcss-check-caption"], [true], ["All Caption Titles"]) : "") 
-        : (cP--, cP < totalForms ? tickCheckBoxes(["#prcss-check-caption"], [false], ["All Caption Titles"]) : "")
-      ) 
-    : ""
-
-    // individual image checkbox
-    eId === `prcss-check-img-${_id}` 
-    ? (prcssElements = [`#prcss-img-${_id}`,`#prcss-img-form-${_id}`,`#prcss-code-img-${_id}`],
-      processCheckBox(`#prcss-check-img-${_id}`,prcssElements),
-      // get if image is checked
-      imgP ? iP = totalForms : "",
-      document.querySelector(`#prcss-check-img-${_id}`).checked 
-      ? (iP++, iP == totalForms ? tickCheckBoxes(["#prcss-check-img"], [true], ["All Images"]) : "") 
-      : (iP--, iP < totalForms ? tickCheckBoxes(["#prcss-check-img"], [false], ["All Images"]) : "")
-      ) 
-    : ""
-      
-    // individual label checkbox   
-    document.querySelector(`#prcss-check-label-${_id}`).onclick = function() {
-      let arrowType = document.querySelector(`#prcss-arrow-${_id}`);
-      labelP ? lP = totalForms -1 : "",
-      replaceClass(this,`#top-label-${_id}`,'sr-only',`#prcss-label-label-${_id}`,'Label');
-      this.checked 
-        ? (
-          lP++,
-          lP == totalForms -1 ? tickCheckBoxes(["#prcss-check-label"], [true], ["All Labels"]) : "",
-          replaceClass(this,`#top-label-${_id}`,'sr-only',`#prcss-label-label-${_id}`,'Label'),
-          // remove sr-only class from the code area
-          hideElements(`#prcss-label-sr-${_id}`),
-          // hide the bottom label unless arrow is double
-          arrowType.value == "3"
-            ? (showElements(`#bottom-label-${_id}`, "inline"),
-              removeClass(`#bottom-label-${_id}`,[`sr-only`]), 
-              writeText([`#top-label-${_id}`,`#top-label-text-${_id}`], "causes"))  
-            : "",
-          arrowType.value == "4"
-            ? (writeText([`#top-label-${_id}`,`#top-label-text-${_id}`], "relates to"))  
-            : ""
-        ) : 
-        (
-          lP--,
-          lP < totalForms ? tickCheckBoxes(["#prcss-check-label"], [false], ["All Labels"]) : "",
-          replaceClass(this,`#top-label-${_id}`,'sr-only',`#prcss-label-label-${_id}`,'Label'),
-          // add sr-only class from the code area
-          showElements(`#prcss-label-sr-${_id}`, ""),
-          // hide the second label for the arrows
-          hideElements(`#bottom-label-${_id}`)    
-        )       
-    }
-
-    // individual highlight checkbox 
-    document.querySelector(`#prcss-check-highlight-${_id}`).onclick = function() {
-      
-     this.checked ?
-    (
-      showElements(`#prcss-code-highlight-${_id}`, ""),
-      addClass(`#prcss-card-${_id}`,["highlighted"],"highlighted")
-    ) : 
-      (
-        hideElements(`#prcss-code-highlight-${_id}`),
-        removeClass(`#prcss-card-${_id}`,["highlighted"])
-      )
-    }
-  }     
-  
-  // console.log(totalForms, lP,iP,cP);
-}
-
-// initializing preview areas
-addCard("#prcss-collapse-container", prcssSelect.value,0, "Process Card");
-addProcessCard(".process-container",prcssSelect.value,0,false);
-addProcessCard("#code-prcss",prcssSelect.value,0,true);
-hideLast([".connector-container",".code-connector-container",".prcss-arrow-select",".prcss-form-checkbox-label"]);
-
-
-// process card collapse input area processing
-processCollapseForm("#prcss-collapse-container","https://via.placeholder.com/400x400", "Alternative text");
-
-
-// arrow selection group or individual or multiple elements
-function processArrows(group, eId, target, _id){
-  let allLabels = document.querySelector("#prcss-check-label");
-  let oneLabel = document.querySelector(`#prcss-check-label-${_id}`)
-  let bottomLabel = group == false ? `#bottom-label-${_id}` : `.bottom-label`;
-  let topLabel = group == false ? `#top-label-${_id}` : `.top-label`;
-  let topText = group == false ? `#top-label-text-${_id}` : `.top-label-text`;
-  let iconType = group == false ? `#prcss-icon-type-${_id}` : `.prcss-icon-type`;
-  let eTarget = group === false ?  target + "-" + _id : target; 
-  document.getElementById(eId).onchange = function () {
-    if (this.value > 0) {
-      switch(this.value) {
-        case "1":
-          group ? document.querySelectorAll("#prcss-collapse-container select").forEach((s) => { s.value = "1"; }) : "" ;          
-          //switch arrow type on preview area
-          switchClass(eTarget, ["arrow-up","relate"], "arrow-down");
-          //hide the label for the double arrow
-          hideElements(bottomLabel);
-          //change label text on preview and code area
-          writeText([topText,topLabel], "leads to");
-          //change arrow class on code area
-          writeText([iconType]," arrow-down");
-          break;
-        case "2":
-          group ? document.querySelectorAll("#prcss-collapse-container select").forEach((s) => { s.value = "2"; }) : "";
-          switchClass(eTarget, ["arrow-down","relate"], "arrow-up");
-          hideElements(bottomLabel);
-          writeText([topText,topLabel], "leads to");
-          writeText([iconType]," arrow-up");
-          break;
-        case "3":
-          group ? document.querySelectorAll("#prcss-collapse-container select").forEach((s) => { s.value = "3"; }) : "";
-          addClass(eTarget,["arrow-up", "arrow-down"], "icon");
-          removeClass(eTarget, ["relate"]);
-          allLabels.checked || oneLabel.checked ? showElements(bottomLabel, "") : "";
-          writeText([topLabel,topText], "causes");
-          writeText([iconType]," arrow-down arrow-up");
-          break;
-        case "4":
-          group ? document.querySelectorAll("#prcss-collapse-container select").forEach((s) => { s.value = "4"; }) : "";
-          switchClass(eTarget,["arrow-up", "arrow-down"], "relate");
-          hideElements(bottomLabel);
-          writeText([topLabel,topText], "relates to");
-          writeText([iconType]," relate");
-          break;
-        default:
-          console.log("Error on Individual Arrow Select.")
-      }
-    }
-  }
-} 
-
-
-
 /*************************
  * new timeline
- * ********************** */    
+ ************************/
 
  const addTimelineCard = (toElement, cardNum, current, encoded) => {
   // checks whether the checkBoxesArray is checked or not and returns/assign a name(second array[variables]) for each of the checkbox elements.
@@ -2086,14 +1804,14 @@ function processArrows(group, eId, target, _id){
       &#60;/h4&#62;</span>
       &lt;p class=&quot;card-text&quot;&gt;
         <span id="timeline-code-body-${total}">Card&#32;${total + 1}&#32;Body&#32;text</span>
-      &lt;/p&gt; 
+      &lt;/p&gt;
     &lt;/div&gt;<span class="timeline-code-img" id="timeline-code-img-${total}" style="display:${image ? "" : "none"};">\n    &lt;figure class=&quot;card-image&quot;&gt;
       &#60;img&#32;src&#61;&#34;<span id="timeline-code-src-${total}">http:&#47;&#47;via.placeholder.com&#47;300x300</span>&#34;&#32;alt&#61;&#34;<span id="timeline-code-alt-${total}">Alternative&#32;text</span>&#34;&#62;<span class="timeline-code-img-caption" id="timeline-code-img-caption-${total}">
       &lt;figcaption&gt;<span id="timeline-code-caption-${total}" class="timeline-code-caption">Image Caption ${total+1}</span>&lt;/figcaption&gt;</span>
     &lt;/figure&gt;</span>
-  &lt;/div&gt;\n`  
+  &lt;/div&gt;\n`
     : // not encoded generated output: preview area
-    `<div class="timeline-card" id="timeline-card-${total}">        
+    `<div class="timeline-card" id="timeline-card-${total}">
         <div class="card-body">
           <h3 class="date-label" id="timeline-card-date-${total}">Date Label ${total + 1}</h3>
           <h4 class="card-title" id="timeline-card-title-${total}" style="display:${caption ? "block" : "none"};">Caption Title ${total+ 1}</h4>
@@ -2131,9 +1849,9 @@ timelineCollapse.onclick = function(e) {
   if (!eId) {
     return;
   } else {
-    // individual arrows select 
-    processArrows(false, eId,"#icon",_id),       
-    
+    // individual arrows select
+    // processArrows(false, eId,"#icon",_id),
+
     // individual caption checkbox
     eId === `timeline-check-caption-${_id}` ?
       (
@@ -2141,8 +1859,8 @@ timelineCollapse.onclick = function(e) {
         processCheckBox(`#timeline-check-caption-${_id}`,timelineElements),
         // get if caption is checked
         captionT ? cT = 3 : "",
-        document.querySelector(`#timeline-check-caption-${_id}`).checked 
-        ? ( cT++, cT == totalForms ? tickCheckBoxes(["#timeline-check-caption"], [true], ["All Caption Titles"]) : "") 
+        document.querySelector(`#timeline-check-caption-${_id}`).checked
+        ? ( cT++, cT == totalForms ? tickCheckBoxes(["#timeline-check-caption"], [true], ["All Caption Titles"]) : "")
         : (cT--, cT < totalForms ? tickCheckBoxes(["#timeline-check-caption"], [false], ["All Caption Titles"]) : "")
       ) : "";
 
@@ -2153,32 +1871,31 @@ timelineCollapse.onclick = function(e) {
         processCheckBox(`#timeline-check-img-${_id}`,timelineElements),
         // get if image is checked
         imgT ? iT = 3 : "",
-        document.querySelector(`#timeline-check-img-${_id}`).checked 
-        ? ( iT++, iT == totalForms ? tickCheckBoxes(["#timeline-check-img"], [true], ["All Images"]) : "") 
+        document.querySelector(`#timeline-check-img-${_id}`).checked
+        ? ( iT++, iT == totalForms ? tickCheckBoxes(["#timeline-check-img"], [true], ["All Images"]) : "")
         : (iT--, iT < totalForms ? tickCheckBoxes(["#timeline-check-img"], [false], ["All Images"]) : "")
       ) : "" ;
-      
+
     // individual image caption checkbox
     eId === `timeline-check-img-caption-${_id}` ?
       (
         timelineElements = [`#timeline-img-caption-${_id}`,`#timeline-img-caption-form-${_id}`, `#timeline-card-caption-${_id}`,`#timeline-code-img-caption-${_id}`],
         processCheckBox(`#timeline-check-img-caption-${_id}`,timelineElements)
       ) : "" ;
-    
-        
-    // individual highlight checkbox 
+
+    // individual highlight checkbox
     document.querySelector(`#timeline-check-highlight-${_id}`).onclick = function() {
       this.checked ?
       (
         showElements(`#timeline-code-highlight-${_id}`, ""),
         addClass(`#timeline-card-${_id}`,["highlighted"],"highlighted")
-      ) : 
+      ) :
         (
           hideElements(`#timeline-code-highlight-${_id}`),
           removeClass(`#timeline-card-${_id}`,["highlighted"])
-        )    
+        )
     }
-  }     
+  }
 }
 
 // process the changes on selection
@@ -2189,12 +1906,12 @@ timelineSelect.onchange = function() {
   let newValue = diff(current, selVal);
 
   //check if selection <= maximum (8) && if selection.value > current
-  ((newValue + current <= maxValue) && (selVal > current)) ? 
+  ((newValue + current <= maxValue) && (selVal > current)) ?
   (
     addCard("#timeline-collapse-container", newValue,current,"Timeline Card"),
     addTimelineCard(".timeline-container",newValue,current,false),
-    addTimelineCard("#code-timeline",newValue,current,true)    
-  ) : 
+    addTimelineCard("#code-timeline",newValue,current,true)
+  ) :
   (
     removeCards(["#timeline-collapse-container", ".timeline-container","#code-timeline"],newValue)
   )
@@ -2205,16 +1922,16 @@ const timelineImageElements = ['.card-image', '.timeline-img-form','.timeline-fo
 processCheckBox("#timeline-check-img",timelineImageElements);
 
 // toggle ALL captions and individual checkboxes show on caption checkbox change
-const timelineCaptionElements = ['h4.card-title','.timeline-caption-form','.timeline-code-title-tag'];    
+const timelineCaptionElements = ['h4.card-title','.timeline-caption-form','.timeline-code-title-tag'];
 processCheckBox("#timeline-check-caption",timelineCaptionElements);
 
 processCollapseForm("#timeline-collapse-container","https://via.placeholder.com/600x400", "Alternative text")
 
-/* *************************************************
+/***************************************************
  * carousel, process and timeline general functions
- * *********************************************** */  
- 
-// addCard form to collapse area 
+ ***************************************************/
+
+// addCard form to collapse area
 // -toSection: section the card/s will be appended //  -cardNum : number of cards // -component: component function is working on (crs,prcss, geshi, quo, etc)
 // captionChecked: if true caption displays 'block' : displays 'none'
 
@@ -2223,10 +1940,9 @@ function addCard(toSection, cardNum, current, type = "Card") {
   let total = 0;
   let xVar = true;
   // checks whether the checkBoxesArray is checked or not and returns/assign a name(second array[variables]) for each of the checkbox elements.
-  component == "crs"  ? checkBoxesChecked([`#crs-check-caption`], ["caption"]) : ""; 
-  component == "prcss" ? checkBoxesChecked([`#prcss-check-label`,`#prcss-check-img`,`#prcss-check-caption`], [`label`,"image","caption"]) : "";
-  component == "timeline" ? checkBoxesChecked([`#timeline-check-img`,`#timeline-check-caption`], ["image","caption"]) : ""; 
-  
+  component == "crs"  ? checkBoxesChecked([`#crs-check-caption`], ["caption"]) : "";
+  component == "timeline" ? checkBoxesChecked([`#timeline-check-img`,`#timeline-check-caption`], ["image","caption"]) : "";
+
   let card = "";
   for (let i = 0; i < cardNum; i++){
     total = i + current;
@@ -2238,75 +1954,56 @@ function addCard(toSection, cardNum, current, type = "Card") {
     </div>
     <div class="collapse-body">
     <form>`;
-    component == "crs" 
+    component == "crs"
       ? card += `${createCheckboxes(["caption"],component,total,[caption],["Caption Title"])}
                 ${createFields(["src","alt"],component,total,["Image source:", "Alternative text:"],["Image source", "Image description"], type)}
                 ${createFields(["title"], component, total, ["Caption title:"],["Caption title"], type, true)}`
       : " ";
-    component == "prcss" 
-      ? card += `${createCheckboxes(["highlight", "img", "caption","label"],component,total,[false, image, caption, label],["Highlight card", "Image", "Caption title", "Label"])}
-                <div class="input-group mb-3 prcss-arrow-select">
-                  <div class="form-group prcss-arrow-form">
-                    <label class="input-group-text" for="prcss-arrow-${total}">Choose arrow type</label>
-                  </div>
-                  <select class="custom-select" id="prcss-arrow-${total}">
-                      <option value="1" selected>Arrow Down</option>
-                      <option value="2">Arrow Up</option>
-                      <option value="3">Double Arrow</option>
-                      <option value="4">Relation</option>
-                  </select>                
-                </div>                  
-                <div class="form-group ${component}-img-form" id="${component}-img-form-${total}" style="">
-                  ${createFields(["src","alt","caption"],component,total,["Image source:", "Alternative text:", "Image caption:"],["Image source", "Image description", "Caption title"], type)}
-                </div>
-                ${createFields(["title"], component, total, ["Caption title:"],["Caption title"],type, true)}
-                `
-      : " ";
-    component == "timeline" 
+    component == "timeline"
       ? card += `${createCheckboxes(["highlight", "caption", "img", "img-caption",],component,total,[false, caption, image, false],["Highlight card", "Caption title", "Image", "Image caption"])}
                 ${createFields(["date", "title"], component, total, ["Date label:", "Caption title:"],["Date label", "Caption title"], type, true)}
                 <div class="form-group ${component}-img-form" id="${component}-img-form-${total}" style="">
                 ${createFields(["src","alt","caption"],component,total,["Image source:", "Alternative text:", "Image caption:"],["Image source", "Image description", "Caption title"], type)}
                 </div>`
-      : " "; 
-    
+      : " ";
+
     card += `</form></div></div>`;
 
-  }  
+  }
     return document.querySelector(toSection).insertAdjacentHTML("beforeend",card);
-  
-} 
+
+}
 
 // create multiple fields
 function createFields(names = [], comp, tot, labelText =[], placeholder =[],type, bodyField = false) {
   let field = `<div class="input-group mb-3">`;
-  names.forEach((n,i) => { 
-   field += 
+  names.forEach((n,i) => {
+   field +=
    `${n == "title" ? `<div class="form-group ${comp}-caption-form" style="display:block" id="${comp}-caption-form-${tot}">` : ""}
    ${n == "caption" ? `<div class="form-group ${comp}-img-caption-form" style="display:none" id="${comp}-img-caption-form-${tot}">` : ""}
     <label for="${comp}-${n}-${tot}">${labelText[i]}</label>
     <input type="text" class="form-control" id="${comp}-${n}-${tot}" aria-label="${comp}-${n}" placeholder="${type} ${placeholder[i]} ${tot + 1}">
     ${n == "title" ? `</div>` : ""}
-    ${n == "caption" ? `</div>` : ""}`      
+    ${n == "caption" ? `</div>` : ""}`
   })
-  bodyField 
+  bodyField
   ? field += `<label class="input-group-text" for="${comp}-body-${tot}">Body text:</label>
                <textarea class="form-control" id="${comp}-body-${tot}" aria-label="${comp}-body" placeholder="${type} Body text ${tot + 1}" rows="6"></textarea>`
-  : "";     
+  : "";
  return `${field} </div>`;
 }
 
-// create multiple Checkboxes 
+// create multiple Checkboxes
 function createCheckboxes(names =[], comp, tot, xVar = [], messageText = []) {
   let box = `<div class="input-group mb-3">`;
-names.forEach((n,i) => { 
-  box += 
+  names.forEach((n,i) => {
+    box +=
   `<div class="custom-control custom-checkbox ${comp}-form-checkbox-${n}" id="${comp}-form-checkbox-${n}-${tot}">
     <input type="checkbox" class="custom-control-input" id="${comp}-check-${n}-${tot}"${xVar[i] == true? " checked" : " unchecked"}>
     <label class="custom-control-label" id="${comp}-label-${n}-${tot}" for="${comp}-check-${n}-${tot}">${messageText[i]}</label>
   </div>`;
-})       
-return `${box}</div>`;
+  })
+  return `${box}</div>`;
 }
 
 // Remove cards depending on selection
@@ -2318,7 +2015,7 @@ const removeCards = (elements = [], cardNum) => {
   }
 }
 
-//Hide the last element of a group and show the rest -way: "block"(displays block) / "" (just override the "none")  
+// Hide the last element of a group and show the rest -way: "block"(displays block) / "" (just override the "none")
 function hideLast(elements, way = "block"){
   elements.forEach((e) => { Array.from(document.querySelectorAll(e)).forEach((el,i,a) => { i < a.length -1 ? el.style.display = way : el.style.display = "none"; }) })
 }
@@ -2337,76 +2034,75 @@ function processCollapseForm(formId, source, altText) {
     let value = document.getElementById(targetTag).value;
     // default card and code areas elements innerText values
     let message = fieldName == "caption" ? `Image ${fName} ${id + 1}` : fieldName == "title" ? `Caption ${fName} ${id + 1}` : fieldName == "body" ? `Card ${id + 1} body text` : fieldName == "date" ? `${fName} label ${id + 1}` : "";
-    
-    e.target !== e.currentTarget && e.target.classList.contains("form-control") ? 
-      (      
-        (targetTag.includes("src") && value == "") 
+
+    e.target !== e.currentTarget && e.target.classList.contains("form-control") ?
+      (
+        (targetTag.includes("src") && value == "")
         ? (
             imgTag.src = source,
             codeTag.innerText = source
-          ) : 
-            (targetTag.includes("alt") && value == "") 
+          ) :
+            (targetTag.includes("alt") && value == "")
             ? (
                 imgTag.alt = altText,
                 codeTag.innerText = altText
-              ) : 
-                (targetTag.includes("caption") || targetTag.includes("title") || targetTag.includes("body") || targetTag.includes("date")) && (value == "") 
+              ) :
+                (targetTag.includes("caption") || targetTag.includes("title") || targetTag.includes("body") || targetTag.includes("date")) && (value == "")
                 ? (
                     cardTag.innerText = message,
                     codeTag.innerText = message
                   ) :
             (
-              targetTag.includes("src") || targetTag.includes("alt") 
+              targetTag.includes("src") || targetTag.includes("alt")
               ? (
-                  imgTag.src = value, 
+                  imgTag.src = value,
                   codeTag.innerText = value,
-                  imgTag.alt = value 
+                  imgTag.alt = value
                 )
               :
                 (
-                  codeTag.innerText = value, 
-                  cardTag.innerText = value 
-                )             
+                  codeTag.innerText = value,
+                  cardTag.innerText = value
+                )
             )
-              
+
       ) : e.stopPropagation();
   }
 }
 
-
 // Toggle on checkbox checked elements in an array
-// -id: checkbox id // -elements: array of elements to show or hide // -label: label id to manipulate 
+// -id: checkbox id // -elements: array of elements to show or hide // -label: label id to manipulate
 // -message: label text message,  "Image caption")
 function processCheckBox(selector,elements = []) {
   let el = document.querySelector(selector);
   let component = selector.slice(1,selector.indexOf("-"));
   let lastDigit = selector.slice(-1);
 
-  !isNaN(lastDigit) ? 
+  !isNaN(lastDigit) ?
   (
     el.checked ?
       elements.forEach((e) => { Array.from(document.querySelectorAll(e)).forEach((el) => { el.style.display = ""; }) })
       : elements.forEach((e) => { Array.from(document.querySelectorAll(e)).forEach((el) => { el.style.display = "none"; }) })
-  ) : 
+  ) :
   (
     el.onchange = (e) => {
       let eId = e.target.id;
       let lastDigit = eId.slice(-1);
       el.checked ?
-      ( 
+      (
         elements.forEach((e) => { Array.from(document.querySelectorAll(e)).forEach((el) => { el.style.display = ""; }) }),
-        // check every individual checkbox of the same selector         
-        isNaN(lastDigit) 
+        // check every individual checkbox of the same selector
+        isNaN(lastDigit)
           ? document.querySelectorAll(`#${component}-collapse-container input[type=checkbox]`)
-            .forEach((ch) => { ch.id.includes(eId) && !ch.id.includes("img-caption") ? ch.checked = true : ch.id.includes("card-caption") })   
+            .forEach((ch) => { ch.id.includes(eId) && !ch.id.includes("img-caption") ? ch.checked = true : ch.id.includes("card-caption") })
             : " it is a number."
       )
         : // selected checkbox is not checked
       (
         elements.forEach((e) => { Array.from(document.querySelectorAll(e)).forEach((el) => { el.style.display = "none"; }) }),
-        isNaN(lastDigit) 
+        isNaN(lastDigit)
           ? document.querySelectorAll(`#${component}-collapse-container input[type=checkbox]`)
-            .forEach((ch) => { ch.id.includes(eId) ? (ch.checked = false, hideElements([".timeline-code-img-caption",".timeline-card-caption", ".timeline-img-caption-form"]) ) : " id is not included" })   
+            .forEach((ch) => { ch.id.includes(eId) ? (ch.checked = false, hideElements([".timeline-code-img-caption",".timeline-card-caption", ".timeline-img-caption-form"]) ) : " id is not included" })
             : " it is a number"
       )
     }
@@ -2439,17 +2135,17 @@ function replaceClass (id,element,_class,label, message) {
 // replace an oldClass with a newClas given an elementId group
 function switchClass(_element, oldClass = [], newClass) {
   el = document.querySelectorAll(_element);
-  el.forEach((e) => { 
-    e.classList.contains(newClass) 
-    ? oldClass.forEach((oC) => { e.classList.remove(oC) }) 
+  el.forEach((e) => {
+    e.classList.contains(newClass)
+    ? oldClass.forEach((oC) => { e.classList.remove(oC) })
     : (e.classList.add(newClass), oldClass.forEach((oC) => { e.classList.remove(oC) })) })
 }
 
-// Adds a class/es to an element group if a given className is already contained.  
+// Adds a class/es to an element group if a given className is already contained.
 function addClass(_element, className = [], classContained) {
   let el = document.querySelectorAll(_element);
-  el.forEach((e) => { 
-    e.classList.contains(classContained) 
+  el.forEach((e) => {
+    e.classList.contains(classContained)
     ? className.forEach((cN) => { e.classList.add(cN) })
     : (e.classList.add(classContained)); });
 }
@@ -2468,7 +2164,7 @@ function hideElements(selector) {
 // shows a group of elements
 function showElements(selector, way = "block") {
   let el = document.querySelectorAll(selector);
-  el.length > 1 
+  el.length > 1
     ? el.forEach((e) => { e.style.display = way })
     : document.querySelector(selector).style.display = way;
 }
@@ -2561,7 +2257,6 @@ copyCode("va");
 copyCode("vd");
 copyCode("test");
 copyCode("crs");
-copyCode("prcss");
 copyCode("timeline");
 
 // on copy code button click
@@ -2578,7 +2273,7 @@ function copyCode(component) {
         altTextForms.push($(this));
       });
       validateForms(altTextForms);
-      altTextValidity == "invalid" ? $("#crs-alt-text-alert").removeClass("d-none") : $("#crs-alt-text-alert").addClass("d-none");            
+      altTextValidity == "invalid" ? $("#crs-alt-text-alert").removeClass("d-none") : $("#crs-alt-text-alert").addClass("d-none");
     }
     validateForms(componentForms);
     if (validity === "invalid") return;
@@ -2607,5 +2302,3 @@ function validateForms(forms) {
     }
   });
 }
-
-
