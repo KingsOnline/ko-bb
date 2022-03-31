@@ -2076,8 +2076,8 @@ function processArrows(group, eId, target, _id){
   let card = "";
   for (let i = 0; i < cardNum; i++) { // for encoded generated output: code area
     let total = i + current;
-    card += encoded ? `  &lt;div class=&quot;timeline-card<span id="timeline-code-highlight-${total}" style="display: none"> highlight</span>&quot;&gt; 
-    &lt;div class=&quot;card-body&quot;&gt; 
+    card += encoded ? `  &lt;div class=&quot;timeline-card<span id="timeline-code-highlight-${total}" style="display: none"> highlighted</span>&quot;&gt;
+    &lt;div class=&quot;card-body&quot;&gt;
       <span class="timeline-code-date-tag" id="timeline-code-date-tag-${total}" style="display:${caption ? "" : "none"};">&#60;h3 class=&quot;date-label&quot;&#62;
         <span id="timeline-code-date-${total}">Date&#32;Label&#32;${total + 1}</span>
       &#60;/h3&#62;</span><span class="timeline-code-title-tag" id="timeline-code-title-tag-${total}" style="display:${caption ? "" : "none"};">
