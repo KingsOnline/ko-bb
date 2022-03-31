@@ -26,9 +26,6 @@ input[type="text"] {
 input[type="radio"] {
   margin-right: 0;
 }
-input[type="radio"] {
-  margin-right: 0;
-}
 textarea {
   font-family: Open Sans, sans-serif;
 }
@@ -49,6 +46,49 @@ form {
 h1, p.header {
   margin-left: 0.75rem;
 }
+h1 {
+  display: flex;
+  align-items: center;
+}
+.tooltip {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+.tooltip::before {
+  position: absolute;
+  top: 0;
+  right: 0.5rem;
+  content: "\f05a";
+  font-family: "Font Awesome 5 Free";
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: #0A2D50;
+}
+.tooltip .tooltiptext {
+  visibility: hidden;
+  position: absolute;
+  width: 200px;
+  background-color: #0A2D50;
+  color: white;
+  text-align: center;
+  padding: 4px;
+  border-radius: 4px;
+  right: 36px;
+}
+.tooltip .tooltiptext::after {
+  content: " ";
+  position: absolute;
+  top: 12px;
+  right: 0;
+  margin-right: -10px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent transparent transparent #0A2D50;
+}
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+}
 h2 {
   margin-top: 1rem;
 }
@@ -66,6 +106,10 @@ img {
 }
 .no-padding {
   padding: 0 !important;
+}
+.select-intro {
+  margin-bottom: 0.5rem;
+  font-weight: bold;
 }
 #component-builder, #component-code {
   display: none;

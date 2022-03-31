@@ -11,8 +11,12 @@
   </head>
   <body>
     <main>
-      <h1>KO Single-platform Bootstrap Builder</h1>
-    <div>
+      <h1>King's Online Single-platform Bootstrap Builder (KO-BB)</h1>
+      <div class="tooltip">
+        <span class="tooltiptext">The KO-BB is a simple tool that uses
+        visual selectors to generate frontend code for Bootstrap components
+        and is designed for use with the King's Online Design System.</span>
+      </div>
       <div>
         <div class="alert alert-btw hide-for-chrome" role="alert">
           <p>As the Builder performs best on Google Chrome, it would be
@@ -21,7 +25,7 @@
           find out how to report an issue.</p>
           </div>
         <div>
-        <p class="header">Select the component you wish to build:</p>
+        <p class="header select-intro">Select the component you wish to build:</p>
         <ul class="nav nav-tabs">
           <?php
             $components = array('Carousel', 'Collapse', 'Timeline', 'Table',

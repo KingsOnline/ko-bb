@@ -2,7 +2,7 @@
   <div class="component-header">
     <h2 class="component-title">FAQs</h2>
   </div>
-  <div class="alert alert-btw" role="alert">
+  <div class="alert alert-btw hide-for-chrome" role="alert">
     <p>The Builder performs best on Google Chrome so it would be advisable
     to switch to this browser if possible. If you continue to encounter any
     problems on Chrome, view the FAQ tab to find out how to report an issue.</p>
@@ -12,22 +12,48 @@
       <div class="collapse-card collapsed">
         <div class="collapse-header">
           <button class="btn btn-link">
-            <h5 class="h4">How can I report an issue?</h5>
+            <h5 class="h4">What are the prerequisites for using the KO-BB?</h5>
           </button>
         </div>
         <div class="collapse-body">
-          <p>If something isn't working as expected, <a href="https://iddkingsonline.com/design-system/request-form.html" target="_blank">submit a bug report</a>.
+          <p>The KO-BB is a simple tool that uses visual selectors to
+          generate frontend code for Bootstrap components and is designed
+          for use with the King's Online Design System. The Design System in
+          turn, is compatible with Grid or Collapsed Topics format modules
+          on Moodle 3.X installations (commonly known as KEATS within
+          KCL).</p>
+          <p>More information on <a
+          href="https://keats.kcl.ac.uk/course/view.php?id=73004&section=2"
+          target="_blank">how to set up the Design System</a> can be
+          accessed here.</p>
         </div>
       </div>
       <div class="collapse-card collapsed">
         <div class="collapse-header">
           <button class="btn btn-link">
-            <h5 class="h4">Where can I find examples of all the different components?</h5>
+            <h5 class="h4">How can I report an issue?</h5>
           </button>
         </div>
         <div class="collapse-body">
-          <p>The <a href="http://iddkingsonline.com/design-system/guide.html">King's Online Design System demo course on KEATS</a> demonstrates all of the different components that can be built. This also contains examples of 
-      commonly used default pages and some of the different types of activities available.</p>
+          <p>If something isn't working as expected, <a
+          href="https://iddkingsonline.com/design-system/request-form.html"
+          target="_blank">submit a bug report</a>.
+        </div>
+      </div>
+      <div class="collapse-card collapsed">
+        <div class="collapse-header">
+          <button class="btn btn-link">
+            <h5 class="h4">Where can I find examples of all the different
+            components?</h5>
+          </button>
+        </div>
+        <div class="collapse-body">
+          <p>The <a
+          href="http://iddkingsonline.com/design-system/guide.html">King's
+          Online Design System Guide</a> demonstrates all of the different
+          components that can be built. This also contains examples of
+          commonly used default pages and some of the different types of
+          activities available.</p>
         </div>
       </div>
       <div class="collapse-card collapsed">
@@ -37,18 +63,23 @@
           </button>
         </div>
         <div class="collapse-body">
-          <p>View the <a href="https://keats.kcl.ac.uk/course/view.php?id=73004&section=1">Release plan and changelog</a> for a 
-      breakdown of what's currently live and what's in store for future releases.</p>
+          <p>View the <a
+          href="https://keats.kcl.ac.uk/course/view.php?id=73004&section=1">Release
+          plan and changelog</a> for a breakdown of what's currently live
+          and what's in store for future releases.</p>
         </div>
       </div>
       <div class="collapse-card collapsed">
         <div class="collapse-header">
           <button class="btn btn-link">
-            <h5 class="h4">Remind me of the snippet that goes into a Moodle Book actvitiy to make it print nicely?</h5>
+            <h5 class="h4">Remind me of the snippet that goes into a Moodle
+            Book actvitiy to make it print nicely?</h5>
           </button>
         </div>
         <div class="collapse-body">
-          <p>Books currently need additional code added in order to make them printer-friendly. Simply add this code to the top of the first page of the book:</p>
+          <p>Books currently need additional code added in order to make
+          them printer-friendly. Simply add this code to the top of the
+          first page of the book:</p>
           <pre><code>&lt;script type="text/javascript"&gt;
 // Load external CSS file into Keats
 loadcss("https://git.iddkingsonline.com/designsystem/css/print-book.css");
@@ -77,7 +108,8 @@ function loadjs(url) {
       <div class="collapse-card collapsed">
         <div class="collapse-header">
           <button class="btn btn-link">
-            <h5 class="h4">Remind me of frequently used custom classes that aren't available via this builder?</h5>
+            <h5 class="h4">Remind me of frequently used custom classes that
+            aren't available via this builder?</h5>
           </button>
         </div>
         <div class="collapse-body">
@@ -86,7 +118,11 @@ function loadjs(url) {
             <div class="row">
               <div class="col-md-3">
                 <h4>Grid layout</h4>
-                <p>Bootstrap’s grid system uses a series of containers, rows, and columns to layout and align content. More information can be found on their <a href="https://keats.kcl.ac.uk/mod/book/view.php?id=3072535&chapterid=245100">documentation page</a>.</p>
+                <p>Bootstrap’s grid system uses a series of containers,
+                rows, and columns to layout and align content. More
+                information can be found on their <a
+                href="https://keats.kcl.ac.uk/mod/book/view.php?id=3072535&chapterid=245100">documentation
+                page</a>.</p>
               </div>
               <div class="col-md-3">
                 <h4>Images</h4>
