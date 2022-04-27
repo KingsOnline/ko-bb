@@ -226,6 +226,12 @@ pre {
   padding-right: unset;
 }
 
+/* float box */
+/* shrink float box image to fit within the preview pane */
+.float-box figure img {
+  max-width: 240px;
+}
+
 /* timeline */
 #builder-timeline #timeline {
   display: block;
