@@ -12,7 +12,7 @@
       <div class="collapse-card collapsed">
         <div class="collapse-header">
           <button class="btn btn-link">
-            <h5 class="h4">What are the prerequisites for using the KO-BB?</h5>
+            <h4>What are the prerequisites for using the KO-BB?</h4>
           </button>
         </div>
         <div class="collapse-body">
@@ -31,7 +31,7 @@
       <div class="collapse-card collapsed">
         <div class="collapse-header">
           <button class="btn btn-link">
-            <h5 class="h4">How can I report an issue?</h5>
+            <h4>How can I report an issue?</h4>
           </button>
         </div>
         <div class="collapse-body">
@@ -43,8 +43,8 @@
       <div class="collapse-card collapsed">
         <div class="collapse-header">
           <button class="btn btn-link">
-            <h5 class="h4">Where can I find examples of all the different
-            components?</h5>
+            <h4>Where can I find examples of all the different
+            components?</h4>
           </button>
         </div>
         <div class="collapse-body">
@@ -59,7 +59,7 @@
       <div class="collapse-card collapsed">
         <div class="collapse-header">
           <button class="btn btn-link">
-            <h5 class="h4">Looks good. What's coming next?</h5>
+            <h4>Looks good. What's coming next?</h4>
           </button>
         </div>
         <div class="collapse-body">
@@ -72,8 +72,8 @@
       <div class="collapse-card collapsed">
         <div class="collapse-header">
           <button class="btn btn-link">
-            <h5 class="h4">Remind me of the snippet that goes into a Moodle
-            Book actvitiy to make it print nicely?</h5>
+            <h4>Remind me of the snippet that goes into a Moodle
+            Book actvitiy to make it print nicely?</h4>
           </button>
         </div>
         <div class="collapse-body">
@@ -108,8 +108,8 @@ function loadjs(url) {
       <div class="collapse-card collapsed">
         <div class="collapse-header">
           <button class="btn btn-link">
-            <h5 class="h4">Remind me of frequently used custom classes that
-            aren't available via this builder?</h5>
+            <h4>Remind me of frequently used custom classes that
+            aren't available via this builder?</h4>
           </button>
         </div>
         <div class="collapse-body">
