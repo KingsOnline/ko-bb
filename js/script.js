@@ -167,125 +167,124 @@ updateText("btn", "#btn-link", "#code-btn-link-text", "#");
  * card                           *
  **********************************/
 
-// change card type between default card and float box
-$("#cd-type").change(function(data){
-  $(this).val() == "float-box"
-    ? ( cdLayout(),
-      showCardImgs(4),
-      $(".cd-img-form").show(),
-      $("#cd-layout-form, .cd-img-check").hide(),
-      $(".code-cd-type, .code-cd-body-class").text("float-box"),
-      $("#code-cd-img-container-open").html("div"),
-      $("#code-cd-img-container-middle").html("&gt;\n&lt;img&gt;"),
-      $("#code-cd-img-container-close").html("&lt;&#47;div&gt;\n&lt;&#47;div&gt;") )
-    : ( $("#cd-layout-form, .cd-img-check").show(),
-      $(".code-cd-type, .code-cd-body-class").text("card") );
-  preview("cd");  
-});
+var cardImagePlaceholderSize = '640x480';
+var cardDeckImagePlaceholderSize = '800x450';
 
 // on select change, show only the required no of cards to edit, update code and preview
-$("#cd-card-no").on('focus', function() {
-  $(this).data("previous",$(this).val());
+$('#cd-card-no').on('focus', function() {
+  $(this).data('previous', $(this).val());
   $(this).blur();
-  $("#cd-card-no").change(function(){
+  $('#cd-card-no').change(function(){
     newMax = Number(($(this).val()));
-    oldMax = Number(($(this).data("previous")));
+    oldMax = Number(($(this).data('previous')));
     // set layout to block for single card
-    if (newMax == 1) $("#cd-layout").val("block").change();
+    if (newMax == 1) $('#cd-layout').val('block').change();
     // remove card deck container for block layout
-    ($("#cd-layout").val() == "block" || newMax == 1) ? $(".code-cd-deck").hide() : $(".code-cd-deck").show() ;
+    ($('#cd-layout').val() == 'block' || newMax == 1) ? $('.code-cd-deck').hide() : $('.code-cd-deck').show() ;
     // compare old and new max list item value
     if (newMax > oldMax) {
       for (let i = oldMax; i < newMax; i++) {
         // add new items
         card = createCard(i+1);
-        $("#code-cd-cards").append(card);
+        $('#code-cd-cards').append(card);
         cdCard = createCardEditorCard(i+1);
-        $("#cards").append(cdCard);
+        $('#cards').append(cdCard);
       }
     } else {
       for (let i = newMax; i < oldMax; i++) {
         // remove items
-        $("#code-cd-card-"+(i+1)).remove();
-        $("#cd-card-"+(i+1)).remove();
+        $(`#code-cd-card-${i+1}`).remove();
+        $(`#cd-card-${i+1}`).remove();
       }
     }
     // reset previous value
-    $(this).removeData("previous");
-    if ($("#cd-type").val() == "float-box") $(".cd-img-check").hide();
-    preview("cd");
+    $(this).removeData('previous');
+    preview('cd');
   });
 });
 
 // change card layout between vertical block and horizontal deck
-$("#cd-layout").change(function(){
+$('#cd-layout').change(function(){
+  for (var i = 0; i < $('#code-cd-cards > span').length; i++) {
+    $(this).val() == 'deck'
+      ? $(`#code-cd-${i+1}-img-src`).text(
+          $(`#code-cd-${i+1}-img-src`).text().replace(cardImagePlaceholderSize,
+          cardDeckImagePlaceholderSize))
+      : $(`#code-cd-${i+1}-img-src`).text(
+          $(`#code-cd-${i+1}-img-src`).text().replace(cardDeckImagePlaceholderSize,
+          cardImagePlaceholderSize));
+    $(`#cd-${i+1}-img-src`).attr('placeholder', 'https://via.placeholder.com' +
+          ($(this).val() == 'deck'
+          ? cardDeckImagePlaceholderSize
+          : cardImagePlaceholderSize));
+  }
   cdLayout();
 });
 
 function cdLayout() {
-  $("#cd-layout").val() == "deck"
-    ? ($("#code-cd-deck-open").text('<div class="card-deck">'),
-      $("#code-cd-deck-close").text("</div>"),
-      $(".code-cd-img-position").text("top"))
-    : ($("#code-cd-deck-open, #code-cd-deck-close").empty(),
-      $("#cd-layout").val("block"));
-  preview("cd");  
+  $('#cd-layout').val() == 'deck'
+    ? ($('#code-cd-deck-open').text('<div class="card-deck">'),
+      $('#code-cd-deck-close').text('</div>'),
+      $('.code-cd-img-position').text('top'))
+    : ($('#code-cd-deck-open, #code-cd-deck-close').empty(),
+      $('#cd-layout').val('block'));
+  preview('cd');
 };
 
 // create all card editor cards and code on page load
 function initialCards(maxCards) {
   for (let i = 1; i <= maxCards; i++) {
     card = createCard(i);
-    $("#code-cd-cards").append(card);
+    $('#code-cd-cards').append(card);
     cdCard = createCardEditorCard(i);
-    $("#cards").append(cdCard);
+    $('#cards').append(cdCard);
   }
-  preview("cd");
+  preview('cd');
 }
 
 // create single card card code
 function createCard(i) {
-  return `<span id="code-cd-card-${i}"><pre>  <span class="code-open-tag">&lt;div&#32;class&#61;&#34;<span class="code-cd-type">${ $("#cd-type").val() == "float-box" ? "float-box" : "card" }</span>&#34;&gt;</span><span id="code-cd-${i}-img">
-    <span id="code-cd-${i}-img-open">&lt;<span id="code-cd-img-container-open">img</span>&#32;src&#61;&#34;</span><span id="code-cd-${i}-img-src">https:\/\/via.placeholder.com\/300</span><span id="code-cd-${i}-img-middle">&#34;</span><span id="code-cd-${i}-img-alt"></span>&gt;<span id="code-cd-img-container-close"></span></span></span>
-    <span class="code-open-tag">&lt;div&#32;class&#61;&#34;<span class="code-cd-body-class">card</span>&#45;body&#34;&gt;</span><span id="code-cd-${i}-title">
-      <span class="code-open-tag">&lt;h4&#32;class&#61;&#34;card-text&#34;&gt;</span><span id="code-cd-${i}-title-text">Card #${i} title</span><span>&lt;&#47;h4&gt;</span></span>
-      <span class="code-open-tag">&lt;p&#32;class&#61;&#34;card-text&#34;&gt;</span><span id="code-cd-${i}-text">Card #${i} text</span><span class="code-close-tag">&lt;&#47;p&gt;</span>
-    <span class="code-close-tag">&lt;&#47;div&gt;</span>
-  <span class="code-close-tag">&lt;&#47;div&gt;</span></pre></span>`;
+  return `<span id='code-cd-card-${i}'><pre>  <span class='code-open-tag'>&lt;div&#32;class&#61;&#34;<span class='code-cd-type'>${ $('#cd-type').val() == 'float-box' ? 'float-box' : 'card' }</span>&#34;&gt;</span><span id='code-cd-${i}-img'>
+    <span id='code-cd-${i}-img-open'>&lt;<span id='code-cd-img-container-open'>img</span>&#32;src&#61;&#34;</span><span id='code-cd-${i}-img-src'>https:\/\/via.placeholder.com\/${ $('#cd-layout').val() == 'deck' ? cardDeckImagePlaceholderSize : cardImagePlaceholderSize }</span><span id='code-cd-${i}-img-middle'>&#34;</span><span id='code-cd-${i}-img-alt'></span>&gt;<span id='code-cd-img-container-close'></span></span></span>
+    <span class='code-open-tag'>&lt;div&#32;class&#61;&#34;<span class='code-cd-body-class'>card</span>&#45;body&#34;&gt;</span><span id='code-cd-${i}-title'>
+      <span class='code-open-tag'>&lt;h4&#32;class&#61;&#34;card-text&#34;&gt;</span><span id='code-cd-${i}-title-text'>Card #${i} title</span><span>&lt;&#47;h4&gt;</span></span>
+      <span class='code-open-tag'>&lt;p&#32;class&#61;&#34;card-text&#34;&gt;</span><span id='code-cd-${i}-text'>Card #${i} text</span><span class='code-close-tag'>&lt;&#47;p&gt;</span>
+    <span class='code-close-tag'>&lt;&#47;div&gt;</span>
+  <span class='code-close-tag'>&lt;&#47;div&gt;</span></pre></span>`;
 }
 
 // create single card editor card, shows first card and collapses all others
 function createCardEditorCard(i) {
   return `
-    <div class="collapse-card cd-card ${ i == 1 ? "" : "collapsed" }" id="cd-card-${i}">
-      <div class="collapse-header" id="cd-card-heading-${i}">
-        <button class="btn btn-link"><h5 class="h4">Card #${i}</h5></button>
+    <div class='collapse-card cd-card ${ i == 1 ? '' : 'collapsed' }' id='cd-card-${i}'>
+      <div class='collapse-header' id='cd-card-heading-${i}'>
+        <button class='btn btn-link'><h5 class='h4'>Card #${i}</h5></button>
       </div>
-      <div class="collapse-body" id="cd-collapse-${i}">
+      <div class='collapse-body' id='cd-collapse-${i}'>
         <form>
-          <div class="custom-control custom-checkbox cd-img-check">
-            <input type="checkbox" class="custom-control-input checked" id="cd-${i}-check-img" checked>
-            <label class="custom-control-label" for="cd-${i}-check-img"><span id="cd-${i}-toggle-img">Remove</span> image</label>
+          <div class='custom-control custom-checkbox cd-img-check'>
+            <input type='checkbox' class='custom-control-input checked' id='cd-${i}-check-img' checked>
+            <label class='custom-control-label' for='cd-${i}-check-img'><span id='cd-${i}-toggle-img'>Remove</span> image</label>
           </div>
-          <div class="custom-control custom-checkbox">
-            <input type="checkbox" class="custom-control-input checked" id="cd-${i}-check-title" checked>
-            <label class="custom-control-label" for="cd-${i}-check-title"><span id="cd-${i}-toggle-title">Remove</span> title</label>
+          <div class='custom-control custom-checkbox'>
+            <input type='checkbox' class='custom-control-input checked' id='cd-${i}-check-title' checked>
+            <label class='custom-control-label' for='cd-${i}-check-title'><span id='cd-${i}-toggle-title'>Remove</span> title</label>
           </div>
-          <div class="form-group cd-img-form cd-${i}-img-form" id="cd-${i}-img-src-form">
-            <label for="cd-${i}-header">Img src</label>
-            <input type="text" class="form-control" id="cd-${i}-img-src" placeholder="https://via.placeholder.com/300">
+          <div class='form-group cd-img-form cd-${i}-img-form' id='cd-${i}-img-src-form'>
+            <label for='cd-${i}-header'>Img src</label>
+            <input type='text' class='form-control' id='cd-${i}-img-src' placeholder='https://via.placeholder.com/${ $('#cd-layout').val() == 'deck' ? cardDeckImagePlaceholderSize : cardImagePlaceholderSize }'>
           </div>
-          <div class="form-group cd-img-form cd-${i}-img-form" id="cd-${i}-img-alt-form">
-            <label for="cd-${i}-header">Img alt text</label>
-            <input type="text" class="form-control" id="cd-${i}-img-alt" placeholder="Description of image">
+          <div class='form-group cd-img-form cd-${i}-img-form' id='cd-${i}-img-alt-form'>
+            <label for='cd-${i}-header'>Img alt text</label>
+            <input type='text' class='form-control' id='cd-${i}-img-alt' placeholder='Description of image'>
           </div>
-          <div class="form-group" id="cd-${i}-title-form">
-            <label for="cd-${i}-title">Title</label>
-            <input type="text" class="form-control" id="cd-${i}-title" placeholder="Card #${i} title">
+          <div class='form-group' id='cd-${i}-title-form'>
+            <label for='cd-${i}-title'>Title</label>
+            <input type='text' class='form-control' id='cd-${i}-title' placeholder='Card #${i} title'>
           </div>
-          <div class="form-group">
-            <label for="cd-${i}-text">Body text</label>
-            <textarea class="form-control" id="cd-${i}-text" placeholder="Card #${i} text" rows="6"></textarea>
+          <div class='form-group'>
+            <label for='cd-${i}-text'>Body text</label>
+            <textarea class='form-control' id='cd-${i}-text' placeholder='Card #${i} text' rows='6'></textarea>
           </div>
         </form>
       </div>
@@ -299,53 +298,73 @@ updateCards(4);
 function updateCards(cardCardLimit) {
   for (let i = 1; i <= cardCardLimit; i++) {
     // toggle optional input fields
-    toggleCheckboxText("#cd-" + i + "-check-img", "#cd-" + i + "-toggle-img");
-    toggleCheckboxText("#cd-" + i + "-check-title", "#cd-" + i + "-toggle-title");
-    toggleCheckbox("cd", "#cd-" + i + "-check-img", ".cd-" + i + "-img-form");
-    toggleCheckbox("cd", "#cd-" + i + "-check-title", "#cd-" + i + "-title-form, #code-cd-" + i + "-title");
+    toggleCheckboxText(`#cd-${i}-check-img`, `#cd-${i}-toggle-img`);
+    toggleCheckboxText(`#cd-${i}-check-title`, `#cd-${i}-toggle-title`);
+    toggleCheckbox('cd', `#cd-${i}-check-img`, `.cd-${i}-img-form`);
+    toggleCheckbox('cd', `#cd-${i}-check-title`, `#cd-${i}-title-form, #code-cd-${i}-title`);
     // toggle img code
-    $(document).on('click', "#cd-" + i + "-check-img", function (event) {
-      $("#cd-" + i + "-check-img").hasClass("checked")
-        ? $("#code-cd-" + i + "-img").html('\n    <span class="code-cd-img-open"></span></span><span class="code-cd-img-src"></span><span id="code-cd-' + i + '-img-src"></span><span class="code-cd-img-alt"></span><span id="code-cd-' + i + '-img-alt"></span><span class="code-cd-img-close"></span>')
-        : $("#code-cd-" + i + "-img").text("");
-      $(".code-cd-img-open").text('<img');
-      $(".code-cd-img-src").text(' src="');
-      $("#code-cd-" + i + "-img-src").text($("#cd-" + i + "-img-src").val() !== "" ? $("#cd-" + i + "-img-src").val() : "https:\/\/via.placeholder.com\/300");
-      $(".code-cd-img-alt").text('"');
-      $("#code-cd-" + i + "-img-alt").text($("#cd-" + i + "-img-alt").val() !== "" ? ' alt="' + $("#cd-" + i + "-img-alt").val() + '"' : "");
-      $(".code-cd-img-close").text('>');
-      preview("cd");
+    $(document).on('click', `#cd-${i}-check-img`, function (event) {
+      $(`#cd-${i}-check-img`).hasClass('checked')
+        ? $(`#code-cd-${i}-img`).html(`
+    <span class='code-cd-img-open'></span><span class='code-cd-img-src'></span><span id='code-cd-${i}-img-src'></span><span class='code-cd-img-alt'></span><span id='code-cd-${i}-img-alt'></span><span class='code-cd-img-close'></span>`)
+        : $(`#code-cd-${i}-img`).text('');
+      $('.code-cd-img-open').text('<img');
+      $('.code-cd-img-src').text(' src="');
+      $(`#code-cd-${i}-img-src`).text($(`#cd-${i}-img-src`).val() !== ''
+        ? $(`#cd-${i}-img-src`).val()
+        : `https://via.placeholder.com/${ $('#cd-layout').val() == 'deck'
+          ? cardDeckImagePlaceholderSize
+          : cardImagePlaceholderSize }`);
+      $('.code-cd-img-alt').text('"');
+      $(`#code-cd-${i}-img-alt`).text($(`#cd-${i}-img-alt`).val() !== ''
+        ? ' alt="' + $(`#cd-${i}-img-alt`).val() + '"'
+        : '');
+      $('.code-cd-img-close').text('>');
+      preview('cd');
     });
     // toggle title code
-    $(document).on('click', "#cd-" + i + "-check-title", function (event) {
-      $("#cd-" + i + "-check-title").hasClass("checked")
-        ? $("#code-cd-" + i + "-title").html('\n      <span class="code-cd-title-open"></span>\n        <span id="code-cd-' + i + '-title-text"></span>\n      <span class="code-cd-title-close"></span>')
-        : $("#code-cd-" + i + "-title").text("");
-      $(".code-cd-title-open").text('<h4 class="card-title">');
-      $("#cd-" + i + "-title").val() !== "" ? $("#code-cd-" + i + "-title-text").text($("#cd-" + i + "-title").val()) : $("#code-cd-" + i + "-title-text").text("Card #" + i + " title");
-      $(".code-cd-title-close").text('</h4>');
-      preview("cd");
+    $(document).on('click', `#cd-${i}-check-title`, function (event) {
+      $(`#cd-${i}-check-title`).hasClass('checked')
+        ? $(`#code-cd-${i}-title`).html(`
+      <span class='code-cd-title-open'></span><span id='code-cd-${i}-title-text'></span><span class='code-cd-title-close'></span>`)
+        : $(`#code-cd-${i}-title`).text('');
+      $('.code-cd-title-open').text('<h4 class="card-title">');
+      $(`#cd-${i}-title`).val() !== '' ?
+      $(`#code-cd-${i}-title-text`).text($(`#cd-${i}-title`).val()) :
+      $(`#code-cd-${i}-title-text`).text(`Card #${i} title`);
+      $('.code-cd-title-close').text('</h4>');
+      preview('cd');
     });
     // update text
-    updateText("cd", "#cd-" + i + "-img-src", "#code-cd-" + i + "-img-src", "https://via.placeholder.com/300");
-    updateAltText("cd", "#cd-" + i + "-img-alt", "#code-cd-" + i + "-img-alt");
-    updateText("cd", "#cd-" + i + "-title", "#code-cd-" + i + "-title-text", "Card #" + i + " title");
-    updateText("cd", "#cd-" + i + "-text", "#code-cd-" + i + "-text", "Card #" + i + " text");
+    $(document).on('keyup', `#cd-${i}-img-src`, function (event) {
+      $(`#code-cd-${i}-img-src`).text(
+        $(this).val() == ''
+          ? `https://via.placeholder.com/${ $('#cd-layout').val() == 'deck'
+            ? cardDeckImagePlaceholderSize
+            : cardImagePlaceholderSize}`
+          : $(this).val()
+      );
+      preview('cd');
+    }).keyup();
+    updateAltText('cd', `#cd-${i}-img-alt`, `#code-cd-${i}-img-alt`);
+    updateText('cd', `#cd-${i}-title`, `#code-cd-${i}-title-text`, `Card #${i} title`);
+    updateText('cd', `#cd-${i}-text`, `#code-cd-${i}-text`, `Card #${i} text`);
   }
 }
 
 function showCardImgs(cardCardLimit) {
   for (let i = 1; i <= cardCardLimit; i++) {
-    $("#code-cd-" + i + "-img").html('\n    <span class="code-cd-img-open"></span><span class="code-cd-img-src"></span><span id="code-cd-' + i + '-img-src"></span><span class="code-cd-img-alt"></span><span id="code-cd-' + i + '-img-alt"></span><span class="code-cd-img-close"></span>');
-    $(".code-cd-img-open").text('<img');
-    $(".code-cd-img-src").text(' src="');
-    $("#code-cd-" + i + "-img-src").text($("#cd-" + i + "-img-src").val() !== ""
-    ? $("#cd-" + i + "-img-src").val() : "https:\/\/via.placeholder.com\/300");
-    $(".code-cd-img-alt").text('"');
-    $("#code-cd-" + i + "-img-alt").text($("#cd-" + i + "-img-alt").val() !== ""
-      ? ' alt="' + $("#cd-" + i + "-img-alt").val() + '"'
-      : "");
-    $(".code-cd-img-close").text('>');
+    $(`#code-cd-${i}-img`).html(`\n    <span class='code-cd-img-open'></span><span class='code-cd-img-src'></span><span id='code-cd-${i}-img-src'></span><span class='code-cd-img-alt'></span><span id='code-cd-${i}-img-alt'></span><span class='code-cd-img-close'></span>`);
+    $('.code-cd-img-open').text('<img');
+    $('.code-cd-img-src').text(' src="');
+    $(`#code-cd-${i}-img-src`).text($(`#cd-${i}-img-src`).val() !== ''
+      ? $(`#cd-${i}-img-src`).val()
+      : 'https:\/\/via.placeholder.com\/300');
+    $('.code-cd-img-alt').text('"');
+    $(`#code-cd-${i}-img-alt`).text($(`#cd-${i}-img-alt`).val() !== ''
+      ? ' alt="' + $(`#cd-${i}-img-alt`).val() + '"'
+      : '');
+    $('.code-cd-img-close').text('>');
   }
 }
 
@@ -403,7 +422,7 @@ function createFloatBoxCard(i) {
   &lt;&#47;div&gt;
   &lt;figure&gt;
     &lt;img src&#61;&#34;<span
-    id="code-fb-${i}-img-src">https://placekitten.com/300/200</span>&#34;<span
+    id="code-fb-${i}-img-src">https://via.placeholder.com/640x480</span>&#34;<span
     id="code-fb-${i}-img-alt"></span>&gt;
   &lt;/figure&gt;
 &lt;&#47;div&gt;</pre></span>`;
@@ -423,7 +442,7 @@ function createFloatBoxEditorCard(i) {
           id="fb-${i}-img-src-form">
             <label for="fb-${i}-header">Img src</label>
             <input type="text" class="form-control" id="fb-${i}-img-src"
-            placeholder="https://via.placeholder.com/300">
+            placeholder="https://via.placeholder.com/640x480">
           </div>
           <div class="form-group fb-img-form fb-${i}-img-form"
           id="fb-${i}-img-alt-form">
@@ -453,10 +472,10 @@ updateFloatBoxes(4);
 function updateFloatBoxes(floatBoxCardLimit) {
   for (let i = 1; i <= floatBoxCardLimit; i++) {
     // update text
-    updateText("fb", "#fb-" + i + "-img-src", "#code-fb-" + i + "-img-src", "https://via.placeholder.com/300");
-    updateAltText("fb", "#fb-" + i + "-img-alt", "#code-fb-" + i + "-img-alt");
-    updateText("fb", "#fb-" + i + "-title", "#code-fb-" + i + "-title-text", "Float box #" + i + " title");
-    updateText("fb", "#fb-" + i + "-text", "#code-fb-" + i + "-text", "Float box #" + i + " text");
+    updateText('fb', `#fb-${i}-img-src`, `#code-fb-${i}-img-src`, 'https://via.placeholder.com/640x480');
+    updateAltText('fb', `#fb-${i}-img-alt`, `#code-fb-${i}-img-alt`);
+    updateText('fb', `#fb-${i}-title`, `#code-fb-${i}-title-text`, `Float box #${i} title`);
+    updateText('fb', `#fb-${i}-text`, `#code-fb-${i}-text`, `Float box #${i} text`);
   }
 }
 
@@ -1566,6 +1585,11 @@ const diff = (a,b) => {
  * new carousel                   *
  **********************************/
 
+// placeholder variables
+const ncLandscapeImagePlaceholder = 'https://via.placeholder.com/1920x960';
+const ncPortraitImagePlaceholder = 'https://via.placeholder.com/640?text=640%20x%20variable%20height';
+let ncImagePlaceholder = ncLandscapeImagePlaceholder;
+
 // constants for the addDots function:
 
 const dots = document.querySelector(".indic-dots");
@@ -1598,13 +1622,13 @@ const addSlides = (toElement, slideNum, current, encoded) => {
         removeClass(".new-carousel",["portrait-carousel"]),
         addClass(".new-carousel",["landscape-carousel"],"new-carousel"),
         writeText([".crs-type"],"landscape"),
-        imgSrc = "https://via.placeholder.com/800x400"
+        imgSrc = ncLandscapeImagePlaceholder
       ) :
         (
           removeClass(".new-carousel",["landscape-carousel"]),
           addClass(".new-carousel",["portrait-carousel"],"new-carousel"),
           writeText([".crs-type"],"portrait"),
-          imgSrc = "https://via.placeholder.com/400x400"
+          imgSrc = ncPortraitImagePlaceholder
         )
 
     let total;
@@ -1687,18 +1711,19 @@ const crsCodeType = document.querySelector(".crs-type");
 type.onchange = () => {
   type.value == "1" ?
   (
-    removeClass(".new-carousel",["portrait-carousel"]),
-    addClass(".new-carousel",["landscape-carousel"],"new-carousel"),
-    writeText([".crs-type"],"landscape"),
-    writeText([".crs-code-src"],"https://via.placeholder.com/800x400"),
-    document.querySelectorAll(".nc-image").forEach((i) => { i.src = "https://via.placeholder.com/800x400?text=Landscape:+2:1"; })
+    ncImagePlaceholder = ncLandscapeImagePlaceholder,
+    removeClass(".new-carousel", ["portrait-carousel"]),
+    addClass(".new-carousel", ["landscape-carousel"], "new-carousel"),
+    writeText([".crs-type"], "landscape")
   ) : (
-    removeClass(".new-carousel",["landscape-carousel"]),
-    addClass(".new-carousel",["portrait-carousel"],"new-carousel"),
-    writeText([".crs-type"],"portrait"),
-    writeText([".crs-code-src"],"https://via.placeholder.com/400x400"),
-    document.querySelectorAll(".nc-image").forEach((i) => { i.src = "https://via.placeholder.com/400x400?text=Portrait:+1:1"; })
+    ncImagePlaceholder = ncPortraitImagePlaceholder,
+    removeClass(".new-carousel", ["landscape-carousel"]),
+    addClass(".new-carousel", ["portrait-carousel"], "new-carousel"),
+    writeText([".crs-type"], "portrait")
   )
+  writeText([".crs-code-src"], ncImagePlaceholder),
+  document.querySelectorAll(".nc-image").forEach((i) => { i.src =
+  ncImagePlaceholder })
 }
 
 
@@ -1773,18 +1798,19 @@ crsCollapse.onclick = function(e) {
         ? ( cC++, cC == totalForms ? tickCheckBoxes(["#crs-check-caption"], [true], ["All Caption Titles"]) : "")
         : (cC--, cC < totalForms ? tickCheckBoxes(["#crs-check-caption"], [false], ["All Caption Titles"]) : "")
       ) : "";
-
   }
-
 }
 
 // collapse form fields control
-processCollapseForm("#crs-collapse-container","https://via.placeholder.com/800x400", "Alternative text")
+processCollapseForm("#crs-collapse-container", ncImagePlaceholder, "Alternative text")
 
 
 /*************************
  * new timeline
  ************************/
+
+const ntlImagePlaceholder =
+'https://via.placeholder.com/260?text=260%20x%20variable%20height';
 
  const addTimelineCard = (toElement, cardNum, current, encoded) => {
   // checks whether the checkBoxesArray is checked or not and returns/assign a name(second array[variables]) for each of the checkbox elements.
@@ -1794,7 +1820,7 @@ processCollapseForm("#crs-collapse-container","https://via.placeholder.com/800x4
   let card = "";
   for (let i = 0; i < cardNum; i++) { // for encoded generated output: code area
     let total = i + current;
-    card += encoded ? `  &lt;div class=&quot;timeline-card<span id="timeline-code-highlight-${total}" style="display: none"> highlight</span>&quot;&gt;
+    card += encoded ? `  &lt;div class=&quot;timeline-card<span id="timeline-code-highlight-${total}" style="display: none"> highlighted</span>&quot;&gt;
     &lt;div class=&quot;card-body&quot;&gt;
       <span class="timeline-code-date-tag" id="timeline-code-date-tag-${total}" style="display:${caption ? "" : "none"};">&#60;h3 class=&quot;date-label&quot;&#62;
         <span id="timeline-code-date-${total}">Date&#32;Label&#32;${total + 1}</span>
@@ -1806,7 +1832,7 @@ processCollapseForm("#crs-collapse-container","https://via.placeholder.com/800x4
         <span id="timeline-code-body-${total}">Card&#32;${total + 1}&#32;Body&#32;text</span>
       &lt;/p&gt;
     &lt;/div&gt;<span class="timeline-code-img" id="timeline-code-img-${total}" style="display:${image ? "" : "none"};">\n    &lt;figure class=&quot;card-image&quot;&gt;
-      &#60;img&#32;src&#61;&#34;<span id="timeline-code-src-${total}">http:&#47;&#47;via.placeholder.com&#47;300x300</span>&#34;&#32;alt&#61;&#34;<span id="timeline-code-alt-${total}">Alternative&#32;text</span>&#34;&#62;<span class="timeline-code-img-caption" id="timeline-code-img-caption-${total}">
+      &#60;img&#32;src&#61;&#34;<span id="timeline-code-src-${total}">${ntlImagePlaceholder}</span>&#34;&#32;alt&#61;&#34;<span id="timeline-code-alt-${total}">Alternative&#32;text</span>&#34;&#62;<span class="timeline-code-img-caption" id="timeline-code-img-caption-${total}">
       &lt;figcaption&gt;<span id="timeline-code-caption-${total}" class="timeline-code-caption">Image Caption ${total+1}</span>&lt;/figcaption&gt;</span>
     &lt;/figure&gt;</span>
   &lt;/div&gt;\n`
@@ -1818,7 +1844,7 @@ processCollapseForm("#crs-collapse-container","https://via.placeholder.com/800x4
           <p class="card-text" id="timeline-card-body-${total}">Card ${total+ 1} Body text</p>
         </div>
         <figure class="card-image">
-          <img id="timeline-img-${total}" class="timeline-img" src="http://via.placeholder.com/600x400" alt="A placeholder image" style="display: ${image ? "block" : "none"};">
+          <img id="timeline-img-${total}" class="timeline-img" src="${ntlImagePlaceholder}" alt="A placeholder image" style="display: ${image ? "block" : "none"};">
           <figcaption id="timeline-card-caption-${total}" class="timeline-card-caption" style="display:none;">Image Caption ${total + 1 }</figcaption>
         <figure>
       </div>`;
@@ -1839,7 +1865,7 @@ let cT = 0; let iT= 0;
 
 // collapse form control
 const timelineCollapse  = document.querySelector("#timeline-collapse-container");
-timelineCollapse.onclick = function(e) {
+timelineCollapse.onchange = function(e) {
   checkBoxesChecked(["#timeline-check-img", "#timeline-check-caption"], ["imgT", "captionT"])
   let totalForms = this.childElementCount;
   let timelineElements = [];
@@ -1925,7 +1951,7 @@ processCheckBox("#timeline-check-img",timelineImageElements);
 const timelineCaptionElements = ['h4.card-title','.timeline-caption-form','.timeline-code-title-tag'];
 processCheckBox("#timeline-check-caption",timelineCaptionElements);
 
-processCollapseForm("#timeline-collapse-container","https://via.placeholder.com/600x400", "Alternative text")
+processCollapseForm("#timeline-collapse-container", ntlImagePlaceholder, "Alternative text")
 
 /***************************************************
  * carousel, process and timeline general functions
@@ -2024,6 +2050,11 @@ function hideLast(elements, way = "block"){
 
 function processCollapseForm(formId, source, altText) {
   document.querySelector(formId).oninput = (e) => {
+    source == ncLandscapeImagePlaceholder || ncPortraitImagePlaceholder
+      ? $('#crs-type').val() == 1
+        ? source = ncLandscapeImagePlaceholder
+        : source = ncPortraitImagePlaceholder
+      : '';
     let targetTag = e.target.id;
     let id = Number(targetTag.slice(-1));
     let codeTag = document.getElementById(targetTag.replace("-","-code-"));
@@ -2034,7 +2065,6 @@ function processCollapseForm(formId, source, altText) {
     let value = document.getElementById(targetTag).value;
     // default card and code areas elements innerText values
     let message = fieldName == "caption" ? `Image ${fName} ${id + 1}` : fieldName == "title" ? `Caption ${fName} ${id + 1}` : fieldName == "body" ? `Card ${id + 1} body text` : fieldName == "date" ? `${fName} label ${id + 1}` : "";
-
     e.target !== e.currentTarget && e.target.classList.contains("form-control") ?
       (
         (targetTag.includes("src") && value == "")
