@@ -5,7 +5,11 @@
     examples</a></p>
   </div>
   <div class="component-body container">
-    <div class="row">
+    <div class="alert alert-caution" role="alert">
+      <p>This component is currently unavailable whilst we address
+      compatibility issues with the Kaltura embed code.</p>
+    </div>
+<!--    <div class="row">
       <div class="options col-md-6">
         <section class="options">
           <h3>Options</h3>
@@ -73,5 +77,6 @@
         </section>
       </div>
     </div>
+ -->
   </div>
 </div>

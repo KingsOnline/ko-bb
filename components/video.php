@@ -4,7 +4,11 @@
     <p><a href="https://keats.kcl.ac.uk/mod/book/view.php?id=3072545&chapterid=240944" target="_blank">Design System guidance and examples</a></p>
   </div>
   <div class="component-body container">
-    <div class="row">
+    <div class="alert alert-caution" role="alert">
+      <p>This component is currently unavailable whilst we address
+      compatibility issues with the Kaltura embed code.</p>
+    </div>
+<!--    <div class="row">
       <div class="options col-md-6">
         <section class="options">
           <h3>Options</h3>
@@ -61,5 +65,6 @@
         </section>
       </div>
     </div>
+-->
   </div>
 </div>
