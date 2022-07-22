@@ -11,7 +11,7 @@ componentAbbrs = {
   "download": "dl",
   "floatbox": "fb",
   "infobox": "ib",
-  "list": "li",
+  "list": "ls",
   "table": "tab",
   "timeline": "timeline",
   "transcript": "ts",
