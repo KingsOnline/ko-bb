@@ -22,7 +22,6 @@
                   </div>
                   <select class="custom-select" id="vd-media-type">
                     <option value="kaltura" selected>Kaltura video</option>
-                    <!-- <option value="kaltura-playlist">Kaltura video playlist</option> -->
                     <option value="youtube">YouTube</option>
                   </select>
                 </div>
