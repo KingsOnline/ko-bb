@@ -1,7 +1,7 @@
 <div class="component-content" id="component-infobox">
   <div class="component-header">
     <h2 class="component-title">Info Box</h2>
-    <p><a href="https://keats.kcl.ac.uk/mod/book/view.php?id=4863158" target="_blank">Design System guidance and
+    <p><a href="https://keats.kcl.ac.uk/mod/book/view.php?id=6947626" target="_blank">Design System guidance and
     examples</a></p>
   </div>
   <div class="component-body container">

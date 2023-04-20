@@ -121,39 +121,67 @@ function loadjs(url) {
                 <p>Bootstrap’s grid system uses a series of containers,
                 rows, and columns to layout and align content. More
                 information can be found on their <a
-                href="https://keats.kcl.ac.uk/mod/book/view.php?id=3072535&chapterid=245100">documentation
+                href="https://getbootstrap.com/docs/4.0/layout/grid/">documentation
                 page</a>.</p>
               </div>
               <div class="col-md-3">
                 <h4>Images</h4>
                 <ul>
-                  <li><p><a href="https://keats.kcl.ac.uk/mod/book/view.php?id=3118028">Full width images</a></p></li>
-                  <li><p><a href="https://keats.kcl.ac.uk/mod/book/view.php?id=3118028&chapterid=244778">Circular images</a></p></li>
-                  <li><p><a href="https://keats.kcl.ac.uk/mod/book/view.php?id=3118028&chapterid=251213">Centered images</a></p></li>
-                  <li><p><a href="https://keats.kcl.ac.uk/mod/book/view.php?id=3118028&chapterid=296015">Screenshots</a></p></li>
-                  <li><p><a href="https://keats.kcl.ac.uk/mod/book/view.php?id=3118028&chapterid=395483">Images with horizontal scroll</a></p></li>
+                  <li><p><a
+                  href="https://keats.kcl.ac.uk/mod/book/view.php?id=6947632&chapterid=650895">Centered
+                  images</a></p></li>
+                  <li><p><a
+                  href="https://keats.kcl.ac.uk/mod/book/view.php?id=6947632&chapterid=662572">Circular
+                  images</a></p></li>
+                  <li><p><a
+                  href="https://keats.kcl.ac.uk/mod/book/view.php?id=6947632&chapterid=662573">Full
+                  width images</a></p></li>
+                  <li><p><a
+                  href="https://keats.kcl.ac.uk/mod/book/view.php?id=6947632&chapterid=662575">Image
+                  with horizontal scroll</a></p></li>
+                  <li><p><a
+                  href="https://keats.kcl.ac.uk/mod/book/view.php?id=6947632&chapterid=662577">Screenshots</a></p></li>
                 </ul>
                 <h4>Float box images</h4>
                 <ul>
-                  <li><p><a href="https://keats.kcl.ac.uk/mod/book/view.php?id=3118035&chapterid=520185#right-aligned-images">Right aligned images</a></p></li>
-                  <li><p><a href="https://keats.kcl.ac.uk/mod/book/view.php?id=3118035&chapterid=520185#small-images">Small images</a></p></li>
+                  <li><p><a
+                  href="https://keats.kcl.ac.uk/mod/book/view.php?id=6947622&chapterid=650853#right-aligned-images">Right
+                  aligned images</a></p></li>
+                  <li><p><a
+                  href="https://keats.kcl.ac.uk/mod/book/view.php?id=6947622&chapterid=650853#small-images">Small
+                  images</a></p></li>
                 </ul>
               </div>
               <div class="col-md-3">
                 <h4>Tables</h4>
                 <ul>
-                  <li><p><a href="https://keats.kcl.ac.uk/mod/book/view.php?id=3119719&chapterid=245102">Tables with horizontal scroll</a></p></li>
-                  <li><p><a href="https://keats.kcl.ac.uk/mod/book/view.php?id=3119719&chapterid=382697">Titles and captions</a></p></li>
-                  <li><p><a href="https://keats.kcl.ac.uk/mod/book/view.php?id=3119719&chapterid=384760">Highlighting cells</a></p></li>
-                  <li><p><a href="https://keats.kcl.ac.uk/mod/book/view.php?id=3119719&chapterid=284890">Diagonally split header</a></p></li>
-                  <li><p><a href="https://keats.kcl.ac.uk/mod/book/view.php?id=3119719&chapterid=402312">Tables without borders</a></p></li>
-                  <li><p><a href="https://keats.kcl.ac.uk/mod/book/view.php?id=3119719&chapterid=402399">Tables with outer border only</a></p></li>
-                  <li><p><a href="https://keats.kcl.ac.uk/mod/book/view.php?id=3119719&chapterid=402422">Tables with right aligned text</a></p></li>
+                  <li><p><a
+                  href="https://keats.kcl.ac.uk/mod/book/view.php?id=6947628&chapterid=650877">Tables
+                  with horizontal scroll</a></p></li>
+                  <li><p><a
+                  href="https://keats.kcl.ac.uk/mod/book/view.php?id=6947628&chapterid=650879">Titles
+                  and captions</a></p></li>
+                  <li><p><a
+                  href="https://keats.kcl.ac.uk/mod/book/view.php?id=6947628&chapterid=650880">Highlighting
+                  cells</a></p></li>
+                  <li><p><a
+                  href="https://keats.kcl.ac.uk/mod/book/view.php?id=6947628&chapterid=650881">Diagonally
+                  split header</a></p></li>
+                  <li><p><a
+                  href="https://keats.kcl.ac.uk/mod/book/view.php?id=6947628&chapterid=650882">Tables
+                  without borders</a></p></li>
+                  <li><p><a
+                  href="https://keats.kcl.ac.uk/mod/book/view.php?id=6947628&chapterid=650883">Tables
+                  with outer border only</a></p></li>
+                  <li><p><a
+                  href="https://keats.kcl.ac.uk/mod/book/view.php?id=6947628&chapterid=650886">Tables
+                  with right aligned text</a></p></li>
                 </ul>
               </div>
               <div class="col-md-3">
                 <h4>Typography</h4>
-                <p><a href="https://keats.kcl.ac.uk/mod/book/view.php?id=3072535&chapterid=245100">Captions</a></p>
+                <p><a
+                href="https://keats.kcl.ac.uk/mod/book/view.php?id=6947610">Captions</a></p>
               </div>
             </div>
           </div>

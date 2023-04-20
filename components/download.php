@@ -1,6 +1,8 @@
 <div class="component-content" id="component-download">
   <div class="component-header">
     <h2 class="component-title">Download file</h2>
+    <p><a href="https://keats.kcl.ac.uk/mod/book/view.php?id=6947598" target="_blank">Design System guidance and
+    examples</a>
   </div>
   <div class="component-body container">
     <div class="row">
