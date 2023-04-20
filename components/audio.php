@@ -5,6 +5,16 @@
     examples</a></p>
   </div>
   <div class="component-body container">
+    <div class="alert alert-caution" role="alert">
+<!--
+      <p>This component is currently unavailable whilst we address
+      compatibility issues with the Kaltura embed code.</p>
+-->
+      <p>CTEL have temporarily reverted the KMS embed code to the iframe
+      option whilst we wait for a few Kaltura issues to be resolved. Please
+      note that this code may change and this component may become unavailable
+      for a short period of time. Updates to follow.</p>
+    </div>
     <div class="row">
       <div class="options col-md-6">
         <section class="options">

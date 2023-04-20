@@ -4,6 +4,12 @@
     <p><a href="https://keats.kcl.ac.uk/mod/book/view.php?id=3072545&chapterid=240944" target="_blank">Design System guidance and examples</a></p>
   </div>
   <div class="component-body container">
+    <div class="alert alert-caution" role="alert">
+      <p>CTEL have temporarily reverted the KMS embed code to the iframe
+      option whilst we wait for a few Kaltura issues to be resolved. Please
+      note that this code may change and this component may become unavailable
+      for a short period of time. Updates to follow.</p>
+    </div>
     <div class="row">
       <div class="options col-md-6">
         <section class="options">
@@ -18,7 +24,6 @@
                   </div>
                   <select class="custom-select" id="vd-media-type">
                     <option value="kaltura" selected>Kaltura video</option>
-                    <!-- <option value="kaltura-playlist">Kaltura video playlist</option> -->
                     <option value="youtube">YouTube</option>
                   </select>
                 </div>
