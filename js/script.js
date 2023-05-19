@@ -107,16 +107,21 @@ $(document).on("click", "#au-check-img", function(event) {
   preview("au");
 });
 
+
 // generate embed code
 $("#au-embed").keyup(function() {
-  embedText = $("#au-embed").val();
-  variables =
-  '&amp;flashvars[infoScreen.plugin]=false&amp;flashvars[titleLabel.plugin]=false&amp;flashvars[related.plugin]=false&amp;flashvars[closedCaptions.displayCaptions]=false&amp;flashvars[transcript.plugin]=false&amp;flashvars[IframeCustomPluginCss1]=https:\/\/kit-free.fontawesome.com\/releases\/latest\/css\/free.min.css&amp;flashvars[IframeCustomPluginCss2]=https:\/\/git.iddkingsonline.com\/designsystem\/css\/audio.css&amp;flashvars[loadingSpinner.imageUrl]=https://git.iddkingsonline.com/assets/blank.png';
-  // add variables
+  let embedText = $("#au-embed").val();
+
+  let audioId = embedText.split('id="').pop().split('"')[0];
+  let audioURL = embedText.split('src="').pop().split('"')[0];
+
+  let templateText = '<iframe id="kaltura_player" src="placeholderURL?iframeembed=true&playerId=kaltura_player&entry_id=1_ps7tz9uc&flashvars[streamerType]=auto&flashvars[localizationCode]=en&flashvars[leadWithHTML5]=true&flashvars[sideBarContainer.plugin]=true&flashvars[sideBarContainer.position]=left&flashvars[sideBarContainer.clickToClose]=true&flashvars[chapters.plugin]=true&flashvars[chapters.layout]=vertical&flashvars[chapters.thumbnailRotator]=false&flashvars[streamSelector.plugin]=true&flashvars[EmbedPlayer.SpinnerTarget]=videoHolder&flashvars[dualScreen.plugin]=true&flashvars[hotspots.plugin]=1&flashvars[Kaltura.addCrossoriginToIframe]=true&&wid=1_8oznd0m2&flashvars[infoScreen.plugin]=false&flashvars[titleLabel.plugin]=false&flashvars[related.plugin]=false&flashvars[closedCaptions.displayCaptions]=false&flashvars[transcript.plugin]=false&flashvars[IframeCustomPluginCss1]=https://kit-free.fontawesome.com/releases/latest/css/free.min.css&flashvars[IframeCustomPluginCss2]=https://git.iddkingsonline.com/designsystem/css/audio.css&flashvars[loadingSpinner.imageUrl]=https://git.iddkingsonline.com/assets/blank.png" width="400" height="285" allowfullscreen="" webkitallowfullscreen="" mozallowfullscreen="" allow="autoplay *; fullscreen *; encrypted-media *" sandbox="allow-forms allow-same-origin allow-scripts allow-top-navigation" frameborder="0" title="Kaltura Player"></iframe>';
+  let templateURL = "https://cdnapisec.kaltura.com/p/2368101/sp/236810100/embedIframeJs/uiconf_id/42876062/partner_id/2368101";
+
   (!embedText == "")
-  ? ( embedText = embedText.replace('\" width', variables + '\" width'),
-    $("#code-au-embed").text(embedText))
-  : $("#code-au-embed").text('<iframe id="kaltura_player" src="https://cdnapisec.kaltura.com/p/2368101/sp/236810100/embedIframeJs/uiconf_id/42876062/partner_id/2368101?iframeembed=true&playerId=kaltura_player&entry_id=1_ps7tz9uc&flashvars[streamerType]=auto&flashvars[localizationCode]=en&flashvars[leadWithHTML5]=true&flashvars[sideBarContainer.plugin]=true&flashvars[sideBarContainer.position]=left&flashvars[sideBarContainer.clickToClose]=true&flashvars[chapters.plugin]=true&flashvars[chapters.layout]=vertical&flashvars[chapters.thumbnailRotator]=false&flashvars[streamSelector.plugin]=true&flashvars[EmbedPlayer.SpinnerTarget]=videoHolder&flashvars[dualScreen.plugin]=true&flashvars[hotspots.plugin]=1&flashvars[Kaltura.addCrossoriginToIframe]=true&&wid=1_8oznd0m2&flashvars[infoScreen.plugin]=false&flashvars[titleLabel.plugin]=false&flashvars[related.plugin]=false&flashvars[closedCaptions.displayCaptions]=false&flashvars[transcript.plugin]=false&flashvars[IframeCustomPluginCss1]=https://kit-free.fontawesome.com/releases/latest/css/free.min.css&flashvars[IframeCustomPluginCss2]=https://git.iddkingsonline.com/designsystem/css/audio.css&flashvars[loadingSpinner.imageUrl]=https://git.iddkingsonline.com/assets/blank.png" width="400" height="285" allowfullscreen="" webkitallowfullscreen="" mozallowfullscreen="" allow="autoplay *; fullscreen *; encrypted-media *" sandbox="allow-forms allow-same-origin allow-scripts allow-top-navigation" frameborder="0" title="Kaltura Player"></iframe>');
+  ? ( templateText = templateText.replace("kaltura_player", audioId).replace("placeholderURL", audioURL),
+  $("#code-au-embed").text(templateText))
+  : $("#code-au-embed").text(templateText.replace("placeholderURL", templateURL));
   preview("au");
 }).keyup();
 
