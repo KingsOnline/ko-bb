@@ -1,7 +1,7 @@
 <div class="component-content" id="component-process">
   <div class="component-header">
     <h2 class="component-title">Process</h2>
-    <p><a href="https://keats.kcl.ac.uk/mod/book/view.php?id=4599788" target="_blank">Design System guidance and examples</a></p>
+    <p><a href="https://keats.kcl.ac.uk/mod/book/view.php?id=6947627" target="_blank">Design System guidance and examples</a></p>
   </div>
   <div class="component-body container">
     <div class="alert alert-danger d-none" role="alert" id="prcss-alt-text-alert">

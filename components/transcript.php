@@ -1,7 +1,7 @@
 <div class="component-content" id="component-transcript">
   <div class="component-header">
     <h2 class="component-title">Transcript</h2>
-    <p><a href="https://keats.kcl.ac.uk/mod/book/view.php?id=5814711" target="_blank">Design System guidance and examples</a></p>
+    <p><a href="https://keats.kcl.ac.uk/mod/book/view.php?id=6947646" target="_blank">Design System guidance and examples</a></p>
   </div>
   <div class="component-body container">
     <div class="row">

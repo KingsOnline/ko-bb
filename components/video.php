@@ -1,7 +1,7 @@
 <div class="component-content" id="component-video">
   <div class="component-header">
     <h2 class="component-title">Video</h2>
-    <p><a href="https://keats.kcl.ac.uk/mod/book/view.php?id=3072545&chapterid=240944" target="_blank">Design System guidance and examples</a></p>
+    <p><a href="https://keats.kcl.ac.uk/mod/book/view.php?id=6947644" target="_blank">Design System guidance and examples</a></p>
   </div>
   <div class="component-body container">
     <div class="alert alert-caution" role="alert">

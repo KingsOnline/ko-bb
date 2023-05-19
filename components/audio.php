@@ -1,7 +1,7 @@
 <div class="component-content" id="component-audio">
   <div class="component-header">
     <h2 class="component-title">Audio</h2>
-    <p><a href="https://keats.kcl.ac.uk/mod/book/view.php?id=3072545&chapterid=269224" target="_blank">Design System guidance and
+    <p><a href="https://keats.kcl.ac.uk/mod/book/view.php?id=6947643" target="_blank">Design System guidance and
     examples</a></p>
   </div>
   <div class="component-body container">

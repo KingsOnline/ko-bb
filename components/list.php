@@ -1,7 +1,7 @@
 <div class="component-content" id="component-list">
   <div class="component-header">
     <h2 class="component-title">List</h2>
-    <p><a href="https://keats.kcl.ac.uk/mod/book/view.php?id=3072535&chapterid=528863" target="_blank">Design System guidance and examples</a></p>
+    <p><a href="https://keats.kcl.ac.uk/mod/book/view.php?id=6947612" target="_blank">Design System guidance and examples</a></p>
   </div>
   <div class="component-body container">
     <div class="row">

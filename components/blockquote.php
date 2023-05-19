@@ -1,7 +1,7 @@
 <div class="component-content" id="component-blockquote">
   <div class="component-header">
     <h2 class="component-title">Blockquote</h2>
-    <p><a href="https://keats.kcl.ac.uk/mod/book/view.php?id=3072535&chapterid=530321" target="_blank">Design System guidance and examples</a></p>
+    <p><a href="https://keats.kcl.ac.uk/mod/book/view.php?id=6947607" target="_blank">Design System guidance and examples</a></p>
   </div>
   <div class="container">
     <div class="row">

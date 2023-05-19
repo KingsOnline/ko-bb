@@ -1,7 +1,7 @@
 <div class="component-content" id="component-timeline">
   <div class="component-header">
     <h2 class="component-title">Timeline</h2>
-    <p><a href="https://keats.kcl.ac.uk/mod/book/view.php?id=5814682" target="_blank">Design System guidance and examples</a></p>
+    <p><a href="https://keats.kcl.ac.uk/mod/book/view.php?id=6947629" target="_blank">Design System guidance and examples</a></p>
   </div>
   <div class="component-body container">
     <div class="alert alert-danger d-none" role="alert" id="timeline-alt-text-alert">

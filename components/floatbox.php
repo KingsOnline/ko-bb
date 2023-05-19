@@ -1,7 +1,7 @@
 <div class="component-content" id="component-floatbox">
   <div class="component-header">
     <h2 class="component-title">Float box</h2>
-    <p><a href="https://keats.kcl.ac.uk/mod/book/view.php?id=3118035&chapterid=520185" target="_blank">Design System guidance and examples</a></p>
+    <p><a href="https://keats.kcl.ac.uk/mod/book/view.php?id=6947622&chapterid=650853" target="_blank">Design System guidance and examples</a></p>
   </div>
   <div class="component-body container">
     <div class="row">
